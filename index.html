@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131b">
+<title>Arcade Corner</title>
+<style>
+:root{--bg:#10131b;--panel:#191e29;--panel2:#222938;--text:#f3f5fa;--muted:#a6afc2;--accent:#9fe870;--line:#30384a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:5;background:#10131bf2;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.top{max-width:1200px;margin:auto;padding:16px 22px;display:flex;align-items:center;gap:18px}
+.logo{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:800;letter-spacing:-.5px;white-space:nowrap}.logo-mark{width:34px;height:34px;border-radius:11px;background:var(--accent);color:#172018;display:grid;place-items:center;font-weight:950}
+.search{flex:1;position:relative}.search input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 40px;color:var(--text);font:inherit;outline:none}.search input:focus{border-color:var(--accent)}.search span{position:absolute;left:14px;top:10px;color:var(--muted);font-size:18px}
+.wrap{max-width:1200px;margin:auto;padding:28px 22px 70px}.hero{display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(120deg,#202b36,#1b2430 65%,#263a31);border:1px solid #34434a;border-radius:22px;padding:32px;margin-bottom:30px;overflow:hidden;position:relative}.hero:after{content:"✦";position:absolute;right:8%;top:-45px;font-size:220px;color:#9fe87012;pointer-events:none}
+.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-1.5px;margin:8px 0 12px;max-width:560px}.hero p{color:#c0c9d5;max-width:520px;margin:0}.hero-badge{flex-shrink:0;background:#121b1c;border:1px solid #415b4b;border-radius:18px;padding:20px;text-align:center;transform:rotate(3deg)}.hero-badge strong{display:block;font-size:35px;color:var(--accent);line-height:1.1}.hero-badge span{font-size:12px;color:var(--muted)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 14px}.section-head h2{font-size:21px;letter-spacing:-.5px;margin:0}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.filter{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}.filter:hover,.filter.active{background:var(--accent);color:#172018;border-color:var(--accent);font-weight:750}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.game{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;transition:transform .16s,border-color .16s;cursor:pointer}.game:hover{transform:translateY(-3px);border-color:#59654f}.cover{height:130px;display:grid;place-items:center;font-size:48px;position:relative;overflow:hidden}.cover:before,.cover:after{content:"";position:absolute;border:1px solid #ffffff25;border-radius:50%;width:150px;height:150px;right:-40px;top:-70px}.cover:after{width:90px;height:90px;right:8px;top:20px}.cover .emoji{filter:drop-shadow(0 6px 7px #0005);z-index:1}.game-body{padding:13px 14px 14px}.game-title{font-size:15px;font-weight:750;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.game-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}.tag{border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:10px;letter-spacing:.3px;text-transform:uppercase}
+.empty{display:none;border:1px dashed var(--line);padding:30px;text-align:center;color:var(--muted);border-radius:14px}.note{margin-top:32px;padding:16px 18px;background:#171c26;border:1px solid var(--line);border-radius:13px;color:var(--muted);font-size:13px}.note strong{color:var(--text)}footer{max-width:1200px;margin:auto;padding:0 22px 28px;color:#7f899c;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+dialog{width:min(760px,calc(100% - 24px));padding:0;background:var(--panel);border:1px solid var(--line);border-radius:18px;color:var(--text);box-shadow:0 20px 80px #0009}dialog::backdrop{background:#05070bd9;backdrop-filter:blur(5px)}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}.modal-head h3{margin:0}.close{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:6px 11px;cursor:pointer;font:inherit}.modal-content{padding:18px}.play-area{min-height:300px;border-radius:12px;background:#111722;display:grid;place-items:center;text-align:center;padding:24px}.play-area p{max-width:420px;color:var(--muted)}.primary{display:inline-block;background:var(--accent);color:#162015;text-decoration:none;font-weight:800;padding:11px 16px;border-radius:10px}.modal-hint{font-size:12px;color:var(--muted);margin-top:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-badge{display:none}}
+@media(max-width:640px){.top{padding:12px 14px;gap:10px;flex-wrap:wrap}.logo{font-size:17px}.search{flex-basis:100%;order:2}.wrap{padding:20px 14px 48px}.hero{padding:23px 20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cover{height:105px;font-size:40px}.game-body{padding:11px}.game-title{font-size:14px}.section-head{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="top">
+  <div class="logo"><div class="logo-mark">AC</div> Arcade Corner</div>
+  <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search games..." aria-label="Search games"></label>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div><div class="eyebrow">Your next quick break</div><h1>Pick a game.<br>Make it a good one.</h1><p>A little corner of the internet for quick challenges, clever puzzles, and arcade classics. Find something fun and jump in.</p></div>
+    <div class="hero-badge"><strong id="count">16</strong><span>games to explore</span></div>
+  </section>
+  <div class="section-head"><div><h2>Game library</h2><p id="result-label">A mix of quick plays and brain teasers</p></div></div>
+  <nav class="filters" id="filters" aria-label="Filter games">
+    <button class="filter active" data-category="All">All games</button>
+    <button class="filter" data-category="Arcade">Arcade</button>
+    <button class="filter" data-category="Puzzle">Puzzle</button>
+    <button class="filter" data-category="Racing">Racing</button>
+    <button class="filter" data-category="Strategy">Strategy</button>
+    <button class="filter" data-category="Classic">Classic</button>
+  </nav>
+  <section class="grid" id="grid" aria-live="polite"></section>
+  <div class="empty" id="empty">No games match that search. Try another title or category.</div>
+  <aside class="note"><strong>Heads up:</strong> This starter site is a game directory, not a proxy or filter bypass. Some game sites may be unavailable on certain networks. The links open the game provider in a new tab.</aside>
+</main>
+<footer><span>Arcade Corner · Made for fun</span><span>Choose a game, take a breather, be kind to your eyes.</span></footer>
+<dialog id="modal">
+  <div class="modal-head"><h3 id="modal-title">Game</h3><button class="close" id="close">Close ✕</button></div>
+  <div class="modal-content"><div class="play-area"><div><div id="modal-emoji" style="font-size:64px">🎮</div><h3 id="modal-name">Ready to play?</h3><p id="modal-desc">This game opens on its original website.</p><a class="primary" id="play-link" href="#" target="_blank" rel="noopener noreferrer">Open game ↗</a></div></div><div class="modal-hint">Games are hosted by their respective providers; this page does not host third-party game files.</div></div>
+</dialog>
+<script>
+const games = [
+ {name:"2048",category:"Puzzle",emoji:"🔢",color:"linear-gradient(135deg,#f5c16c,#b96d37)",desc:"Slide numbered tiles and combine them to reach 2048.",url:"https://play2048.co/"},
+ {name:"Hextris",category:"Arcade",emoji:"🔷",color:"linear-gradient(135deg,#3b73c5,#4b2c91)",desc:"Rotate the hexagon and match falling colored blocks.",url:"https://hextris.io/"},
+ {name:"Cookie Clicker",category:"Classic",emoji:"🍪",color:"linear-gradient(135deg,#b87c4b,#5b332a)",desc:"Bake cookies, unlock upgrades, and build a cookie empire.",url:"https://orteil.dashnet.org/cookieclicker/"},
+ {name:"Little Alchemy 2",category:"Puzzle",emoji:"🧪",color:"linear-gradient(135deg,#78c7d8,#5261b7)",desc:"Mix simple elements to discover surprising new things.",url:"https://littlealchemy2.com/"},
+ {name:"Chess",category:"Strategy",emoji:"♟️",color:"linear-gradient(135deg,#78a98a,#315f4c)",desc:"Play a thoughtful game of chess and practice your tactics.",url:"https://lichess.org/"},
+ {name:"Sudoku",category:"Puzzle",emoji:"🧩",color:"linear-gradient(135deg,#8d9cb8,#465777)",desc:"Fill the grid with numbers without repeating them.",url:"https://sudoku.com/"},
+ {name:"Minesweeper",category:"Classic",emoji:"💣",color:"linear-gradient(135deg,#a3b1c5,#5e6e83)",desc:"Use clues to uncover safe squares and avoid the mines.",url:"https://minesweeper.online/"},
+ {name:"FreeChess",category:"Strategy",emoji:"🏰",color:"linear-gradient(135deg,#d2b17a,#79573a)",desc:"Another place to sharpen your chess strategy.",url:"https://www.freechess.org/"},
+ {name:"Tetris",category:"Classic",emoji:"🟪",color:"linear-gradient(135deg,#8a6bd1,#4b3e94)",desc:"Fit falling shapes together and clear complete lines.",url:"https://tetris.com/play-tetris"},
+ {name:"Wordle",category:"Puzzle",emoji:"🔤",color:"linear-gradient(135deg,#8da56c,#48613b)",desc:"Guess the five-letter word in six tries.",url:"https://www.nytimes.com/games/wordle/index.html"},
+ {name:"Slope",category:"Racing",emoji:"🟢",color:"linear-gradient(135deg,#48c8b4,#176f89)",desc:"Guide a rolling ball along a fast, twisting course.",url:"https://slope-game.github.io/"},
+ {name:"Drift Hunters",category:"Racing",emoji:"🏎️",color:"linear-gradient(135deg,#e98c5c,#a33c42)",desc:"Tune a car and practice your drifting lines.",url:"https://drifthunters.com/"},
+ {name:"Pac-Man",category:"Classic",emoji:"🟡",color:"linear-gradient(135deg,#e9c94f,#ad6d22)",desc:"A maze classic: collect dots and avoid the ghosts.",url:"https://www.google.com/logos/2010/pacman10-i.html"},
+ {name:"Simon Tatham Puzzles",category:"Puzzle",emoji:"🧠",color:"linear-gradient(135deg,#5a9dcb,#344c86)",desc:"A collection of logic puzzles for a quick brain workout.",url:"https://www.chiark.greenend.org.uk/~sgtatham/puzzles/"},
+ {name:"Krunker",category:"Arcade",emoji:"🎯",color:"linear-gradient(135deg,#d06d69,#783b65)",desc:"Fast-paced browser arena action. Check the site's age rating.",url:"https://krunker.io/"},
+ {name:"GeoGuessr",category:"Strategy",emoji:"🌍",color:"linear-gradient(135deg,#75b98d,#286c60)",desc:"Explore places around the world and figure out where you are.",url:"https://www.geoguessr.com/"}
+];
+const grid=document.getElementById('grid'), search=document.getElementById('search'), empty=document.getElementById('empty');
+let category='All';
+function render(){
+ const q=search.value.trim().toLowerCase();
+ const shown=games.filter(g=>(category==='All'||g.category===category)&&(g.name+' '+g.category+' '+g.desc).toLowerCase().includes(q));
+ grid.innerHTML='';
+ shown.forEach(g=>{
+  const card=document.createElement('article');card.className='game';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Details for '+g.name);
+  card.innerHTML=`<div class="cover" style="background:${g.color}"><span class="emoji">${g.emoji}</span></div><div class="game-body"><h3 class="game-title"></h3><div class="game-meta"><span>${g.category}</span><span class="tag">Play ↗</span></div></div>`;
+  card.querySelector('.game-title').textContent=g.name;
+  const open=()=>showGame(g);card.addEventListener('click',open);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+  grid.appendChild(card);
+ });
+ empty.style.display=shown.length?'none':'block';
+ document.getElementById('count').textContent=games.length;
+ document.getElementById('result-label').textContent=`Showing ${shown.length} of ${games.length} games`;
+}
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('button[data-category]');if(!b)return;category=b.dataset.category;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));render()});
+search.addEventListener('input',render);
+const modal=document.getElementById('modal');
+function showGame(g){document.getElementById('modal-title').textContent=g.name;document.getElementById('modal-name').textContent=g.name;document.getElementById('modal-emoji').textContent=g.emoji;document.getElementById('modal-desc').textContent=g.desc;document.getElementById('play-link').href=g.url;modal.showModal()}
+document.getElementById('close').addEventListener('click',()=>modal.close());
+modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
+render();
+</script>
+</body>
+</html>
