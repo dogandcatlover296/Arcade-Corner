@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Google Classroom</title>
 <link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
 
@@ -18,18 +18,9 @@ body {
   background: linear-gradient(135deg, #11102b, #30216b, #102b52);
 }
 
-header {
-  text-align: center;
-  padding: 22px 12px 12px;
-}
-
+header { text-align: center; padding: 22px 12px 12px; }
 h1 { margin: 0 0 8px; font-size: 34px; }
-
-#clock {
-  margin: 8px;
-  color: #d9d5ff;
-  font-size: 16px;
-}
+#clock { margin: 8px; color: #d9d5ff; font-size: 15px; }
 
 .tabs {
   display: flex;
@@ -39,20 +30,18 @@ h1 { margin: 0 0 8px; font-size: 34px; }
   padding: 12px;
 }
 
-.tab, .action {
+button, .action {
   border: 1px solid #8276ff;
   border-radius: 11px;
-  padding: 12px 17px;
-  font-size: 15px;
+  padding: 12px 16px;
   color: white;
+  background: #29234e;
+  font-size: 15px;
   cursor: pointer;
   text-decoration: none;
-  background: #29234e;
 }
 
-.tab.active, .action {
-  background: #7057ff;
-}
+.tab.active, .action.primary { background: #7057ff; }
 
 .panel { display: none; padding: 8px 12px 18px; }
 .panel.active { display: block; }
@@ -69,11 +58,11 @@ h1 { margin: 0 0 8px; font-size: 34px; }
   width: 100%;
   height: 68vh;
   min-height: 350px;
+  position: relative;
+  overflow: hidden;
   border: 2px solid #7767ff;
   border-radius: 14px;
-  overflow: hidden;
   background: white;
-  position: relative;
 }
 
 .viewer iframe {
@@ -84,6 +73,7 @@ h1 { margin: 0 0 8px; font-size: 34px; }
   background: white;
 }
 
+/* Full-screen layout */
 .viewer:fullscreen,
 .viewer.fallback-fullscreen {
   position: fixed;
@@ -94,6 +84,7 @@ h1 { margin: 0 0 8px; font-size: 34px; }
   min-height: 0;
   border: 0;
   border-radius: 0;
+  background: white;
 }
 
 .viewer:fullscreen iframe,
@@ -102,17 +93,54 @@ h1 { margin: 0 0 8px; font-size: 34px; }
   height: 100%;
 }
 
-.exit-fullscreen {
+/* Small controls in the corner during full screen */
+.fullscreen-controls {
   display: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
 }
 
-.viewer:fullscreen .exit-fullscreen,
-.viewer.fallback-fullscreen .exit-fullscreen {
-  display: block;
+.viewer:fullscreen .fullscreen-controls,
+.viewer.fallback-fullscreen .fullscreen-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10000;
+  padding: 5px;
+  border-radius: 12px;
+  background: rgba(25, 20, 55, 0.82);
+  opacity: 0.35;
+  transition: opacity 0.2s;
+}
+
+.viewer:fullscreen .fullscreen-controls:hover,
+.viewer:fullscreen .fullscreen-controls:focus-within,
+.viewer.fallback-fullscreen .fullscreen-controls:hover,
+.viewer.fallback-fullscreen .fullscreen-controls:focus-within {
+  opacity: 1;
+}
+
+.logo {
+  font-size: 21px;
+  line-height: 1;
+  padding: 7px;
+  border: 0;
+  background: transparent;
+}
+
+.mini-button {
+  padding: 8px 10px;
+  font-size: 17px;
+  border: 0;
+  background: #7057ff;
+}
+
+.exit-button {
+  padding: 8px 10px;
+  font-size: 17px;
+  border: 0;
+  background: #29234e;
 }
 
 footer {
@@ -125,7 +153,7 @@ footer {
 @media (max-width: 600px) {
   h1 { font-size: 29px; }
   .viewer { height: 65vh; }
-  .tab, .action { padding: 11px 13px; }
+  button, .action { padding: 11px 13px; }
 }
 </style>
 </head>
@@ -144,54 +172,56 @@ footer {
 <main>
   <section class="panel active" id="fern">
     <div class="toolbar">
-      <button class="action" onclick="goFullscreen('fernViewer')">
+      <button class="action primary" onclick="goFullscreen('fernViewer')">
         ⛶ Full Screen
       </button>
       <button class="action" onclick="refreshSite('fernFrame')">
         🔄 Refresh
       </button>
-      <a class="tab"
-         href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
-         target="_blank" rel="noopener">
+      <a class="action" target="_blank" rel="noopener"
+        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22">
         Open Fern ↗
       </a>
     </div>
 
     <div class="viewer" id="fernViewer">
-      <button class="action exit-fullscreen"
-        onclick="exitFullscreen('fernViewer')">
-        ✕ Exit Full Screen
-      </button>
+      <div class="fullscreen-controls">
+        <span class="logo" aria-label="Arcade Corner logo">🎮</span>
+        <button class="mini-button" onclick="refreshSite('fernFrame')"
+          aria-label="Refresh Fern" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('fernViewer')"
+          aria-label="Exit full screen" title="Exit full screen">✕</button>
+      </div>
       <iframe id="fernFrame"
         src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
-        title="Fern" allowfullscreen>
-      </iframe>
+        title="Fern" allowfullscreen></iframe>
     </div>
   </section>
 
   <section class="panel" id="secureweb">
     <div class="toolbar">
-      <button class="action" onclick="goFullscreen('secureViewer')">
+      <button class="action primary" onclick="goFullscreen('secureViewer')">
         ⛶ Full Screen
       </button>
       <button class="action" onclick="refreshSite('secureFrame')">
         🔄 Refresh
       </button>
-      <a class="tab" href="https://securedweb.lol/"
-         target="_blank" rel="noopener">
+      <a class="action" href="https://securedweb.lol/"
+        target="_blank" rel="noopener">
         Open SecureWeb ↗
       </a>
     </div>
 
     <div class="viewer" id="secureViewer">
-      <button class="action exit-fullscreen"
-        onclick="exitFullscreen('secureViewer')">
-        ✕ Exit Full Screen
-      </button>
-      <iframe id="secureFrame"
-        src="https://securedweb.lol/"
-        title="SecureWeb" allowfullscreen>
-      </iframe>
+      <div class="fullscreen-controls">
+        <span class="logo" aria-label="Arcade Corner logo">🎮</span>
+        <button class="mini-button" onclick="refreshSite('secureFrame')"
+          aria-label="Refresh SecureWeb" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('secureViewer')"
+          aria-label="Exit full screen" title="Exit full screen">✕</button>
+      </div>
+      <iframe id="secureFrame" src="https://securedweb.lol/"
+        title="SecureWeb" allowfullscreen></iframe>
     </div>
   </section>
 </main>
@@ -226,7 +256,6 @@ document.querySelectorAll('.tab[data-panel]').forEach(button => {
     document.querySelectorAll('.panel').forEach(panel =>
       panel.classList.remove('active')
     );
-
     button.classList.add('active');
     document.getElementById(button.dataset.panel).classList.add('active');
   });
@@ -234,12 +263,9 @@ document.querySelectorAll('.tab[data-panel]').forEach(button => {
 
 function refreshSite(frameId) {
   const frame = document.getElementById(frameId);
-  try {
-    frame.contentWindow.location.reload();
-  } catch (error) {
-    // Reload the iframe if direct reload is blocked by browser security.
-    frame.src = frame.src;
-  }
+  const currentSrc = frame.src;
+  frame.src = 'about:blank';
+  frame.src = currentSrc;
 }
 
 async function goFullscreen(id) {
