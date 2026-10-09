@@ -2,245 +2,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Google Classroom</title>
-  <link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Classroom</title>
+<link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: linear-gradient(135deg, #080e25, #211347, #101b3b);
-      min-height: 100vh;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #11102b, #30216b, #102b52);
+  min-height: 100vh;
+}
 
-    header {
-      text-align: center;
-      padding: 28px 14px 12px;
-    }
+header {
+  text-align: center;
+  padding: 22px 12px 12px;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: clamp(30px, 7vw, 48px);
-      background: linear-gradient(90deg, #77c7ff, #c8a0ff);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+h1 {
+  margin: 0 0 8px;
+  font-size: 34px;
+}
 
-    header p { color: #c7d5ff; margin-top: 8px; }
+#clock {
+  font-size: 17px;
+  color: #d9d5ff;
+  margin: 8px;
+}
 
-    .clock-card {
-      background: linear-gradient(135deg, #182957, #512b79);
-      border: 1px solid #6078bd;
-      border-radius: 16px;
-      padding: 16px;
-      margin: 14px auto 22px;
-      max-width: 450px;
-      width: calc(100% - 28px);
-      text-align: center;
-    }
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+}
 
-    .clock-label {
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: #d5ddff;
-    }
+.tab {
+  border: 1px solid #8276ff;
+  background: #27204c;
+  color: white;
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    #arcade-clock {
-      font-size: clamp(32px, 8vw, 48px);
-      font-weight: bold;
-      margin: 8px 0;
-      font-variant-numeric: tabular-nums;
-    }
+.tab.active {
+  background: #7057ff;
+}
 
-    #arcade-date { color: #d5ddff; }
+.panel {
+  display: none;
+  padding: 8px 12px 18px;
+}
 
-    .tabs {
-      display: flex;
-      gap: 10px;
-      padding: 0 14px;
-      max-width: 850px;
-      margin: 0 auto 14px;
-    }
+.panel.active {
+  display: block;
+}
 
-    .tab-button {
-      flex: 1;
-      padding: 14px 8px;
-      border: 1px solid #5269a5;
-      border-radius: 12px;
-      background: #172345;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.toolbar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 6px auto 12px;
+}
 
-    .tab-button.active {
-      background: linear-gradient(135deg, #5268f5, #873fe0);
-      border-color: #b4a7ff;
-    }
+.action {
+  display: inline-block;
+  border: none;
+  border-radius: 10px;
+  background: #7057ff;
+  color: white;
+  padding: 12px 16px;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-    .panel {
-      max-width: 1000px;
-      width: calc(100% - 28px);
-      margin: 0 auto 30px;
-      padding: 16px;
-      border: 1px solid #465b94;
-      border-radius: 16px;
-      background: rgba(15, 25, 55, 0.95);
-    }
+.action.secondary {
+  background: #29234e;
+  border: 1px solid #8276ff;
+}
 
-    .panel h2 { margin-top: 0; font-size: 22px; }
+.viewer {
+  width: 100%;
+  height: 68vh;
+  min-height: 350px;
+  border: 2px solid #7767ff;
+  border-radius: 14px;
+  overflow: hidden;
+  background: white;
+}
 
-    .description {
-      color: #c5d2f8;
-      font-size: 14px;
-      line-height: 1.5;
-    }
+.viewer iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
 
-    .frame-wrap {
-      overflow: hidden;
-      border-radius: 12px;
-      background: #090d19;
-      border: 1px solid #5269a5;
-    }
+/* Full-screen viewer */
+.viewer:fullscreen {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: white;
+}
 
-    iframe {
-      display: block;
-      width: 100%;
-      height: 65vh;
-      min-height: 400px;
-      border: 0;
-      background: white;
-    }
+.viewer:fullscreen iframe {
+  width: 100%;
+  height: 100%;
+}
 
-    .open-link {
-      display: inline-block;
-      margin: 12px 0 4px;
-      padding: 11px 15px;
-      border-radius: 9px;
-      background: #604fe7;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
+.fullscreen-exit {
+  display: none;
+}
 
-    .hidden { display: none; }
+.viewer:fullscreen .fullscreen-exit {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  top: 12px;
+  right: 12px;
+}
 
-    footer {
-      text-align: center;
-      color: #9eadd8;
-      padding: 10px 15px 28px;
-      font-size: 12px;
-    }
-  </style>
+footer {
+  text-align: center;
+  color: #c8c3f5;
+  padding: 12px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 29px; }
+  .viewer { height: 65vh; }
+  .tab { padding: 11px 18px; }
+}
+
+/* iPhone Safari fallback when native fullscreen isn't available */
+.viewer.fallback-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: white;
+}
+
+.viewer.fallback-fullscreen iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.viewer.fallback-fullscreen .fullscreen-exit {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  top: 12px;
+  right: 12px;
+}
+</style>
 </head>
 
 <body>
-  <header>
-    <h1>🎮 Arcade Corner</h1>
-    <p>Your gaming corner. Pick a tab and have fun!</p>
-  </header>
+<header>
+  <h1>🎮 Arcade Corner</h1>
+  <div id="clock">Loading clock...</div>
+</header>
 
-  <div class="clock-card">
-    <div class="clock-label">🕒 YOUR LOCAL TIME</div>
-    <div id="arcade-clock">Loading...</div>
-    <div id="arcade-date"></div>
-  </div>
+<nav class="tabs">
+  <button class="tab active" data-panel="fern">🌿 Fern</button>
+  <button class="tab" data-panel="secureweb">🌐 SecureWeb</button>
+</nav>
 
-  <nav class="tabs">
-    <button class="tab-button active" id="fern-tab"
-      onclick="showTab('fern')">🌿 Fern</button>
-    <button class="tab-button" id="secure-tab"
-      onclick="showTab('secure')">🌐 SecureWeb</button>
-  </nav>
-
-  <main>
-    <section class="panel" id="fern-panel">
-      <h2>🌿 Fern</h2>
-      <p class="description">
-        Welcome to Fern! Try the website below. If it doesn't load
-        inside the page, use the button to open it separately.
-      </p>
-
-      <div class="frame-wrap">
-        <iframe
-          src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
-          title="Fern"
-          allowfullscreen>
-        </iframe>
-      </div>
-
-      <a class="open-link"
-        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
-        target="_blank" rel="noopener noreferrer">
+<main>
+  <section class="panel active" id="fern">
+    <div class="toolbar">
+      <button class="action" onclick="goFullscreen('fernViewer')">
+        ⛶ Full Screen
+      </button>
+      <a class="action secondary"
+         href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
+         target="_blank" rel="noopener">
         Open Fern ↗
       </a>
-    </section>
+    </div>
 
-    <section class="panel hidden" id="secure-panel">
-      <h2>🌐 SecureWeb</h2>
-      <p class="description">
-        Try SecureWeb below. If it cannot display inside this page,
-        use the button to open it separately.
-      </p>
+    <div class="viewer" id="fernViewer">
+      <button class="action fullscreen-exit"
+              onclick="exitFullscreen('fernViewer')">
+        ✕ Exit Full Screen
+      </button>
+      <iframe
+        src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
+        title="Fern" allowfullscreen>
+      </iframe>
+    </div>
+  </section>
 
-      <div class="frame-wrap">
-        <iframe
-          src="https://securedweb.lol/"
-          title="SecureWeb">
-        </iframe>
-      </div>
-
-      <a class="open-link"
-        href="https://securedweb.lol/"
-        target="_blank" rel="noopener noreferrer">
+  <section class="panel" id="secureweb">
+    <div class="toolbar">
+      <button class="action" onclick="goFullscreen('secureViewer')">
+        ⛶ Full Screen
+      </button>
+      <a class="action secondary"
+         href="https://securedweb.lol/"
+         target="_blank" rel="noopener">
         Open SecureWeb ↗
       </a>
-    </section>
-  </main>
+    </div>
 
-  <footer>Arcade Corner · Enjoy your games!</footer>
+    <div class="viewer" id="secureViewer">
+      <button class="action fullscreen-exit"
+              onclick="exitFullscreen('secureViewer')">
+        ✕ Exit Full Screen
+      </button>
+      <iframe
+        src="https://securedweb.lol/"
+        title="SecureWeb" allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+</main>
 
-  <script>
-    function showTab(tab) {
-      const fernPanel = document.getElementById("fern-panel");
-      const securePanel = document.getElementById("secure-panel");
-      const fernTab = document.getElementById("fern-tab");
-      const secureTab = document.getElementById("secure-tab");
+<footer>Arcade Corner • Have fun!</footer>
 
-      fernPanel.classList.toggle("hidden", tab !== "fern");
-      securePanel.classList.toggle("hidden", tab !== "secure");
-      fernTab.classList.toggle("active", tab === "fern");
-      secureTab.classList.toggle("active", tab === "secure");
+<script>
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  const date = now.toLocaleDateString([], {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  document.getElementById('clock').textContent = time + ' • ' + date;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+document.querySelectorAll('.tab').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    document.querySelectorAll('.panel').forEach(panel => {
+      panel.classList.remove('active');
+    });
+
+    button.classList.add('active');
+    document.getElementById(button.dataset.panel).classList.add('active');
+  });
+});
+
+async function goFullscreen(id) {
+  const viewer = document.getElementById(id);
+
+  try {
+    if (viewer.requestFullscreen) {
+      await viewer.requestFullscreen();
+    } else if (viewer.webkitRequestFullscreen) {
+      viewer.webkitRequestFullscreen();
+    } else {
+      viewer.classList.add('fallback-fullscreen');
     }
+  } catch (error) {
+    viewer.classList.add('fallback-fullscreen');
+  }
+}
 
-    function updateArcadeClock() {
-      const now = new Date();
+async function exitFullscreen(id) {
+  const viewer = document.getElementById(id);
 
-      document.getElementById("arcade-clock").textContent =
-        now.toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit",
-          second: "2-digit"
-        });
+  if (viewer.classList.contains('fallback-fullscreen')) {
+    viewer.classList.remove('fallback-fullscreen');
+    return;
+  }
 
-      document.getElementById("arcade-date").textContent =
-        now.toLocaleDateString([], {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric"
-        });
+  try {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      await document.exitFullscreen();
+    } else if (document.webkitFullscreenElement &&
+               document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else {
+      viewer.classList.remove('fallback-fullscreen');
     }
+  } catch (error) {
+    viewer.classList.remove('fallback-fullscreen');
+  }
+}
 
-    updateArcadeClock();
-    setInterval(updateArcadeClock, 1000);
-  </script>
+document.addEventListener('fullscreenchange', () => {
+  document.querySelectorAll('.viewer').forEach(viewer => {
+    if (document.fullscreenElement !== viewer) {
+      viewer.classList.remove('fallback-fullscreen');
+    }
+  });
+});
+</script>
 </body>
 </html>
