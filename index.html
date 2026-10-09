@@ -12,10 +12,10 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: Arial, sans-serif;
   color: white;
   background: linear-gradient(135deg, #11102b, #30216b, #102b52);
-  min-height: 100vh;
 }
 
 header {
@@ -23,15 +23,12 @@ header {
   padding: 22px 12px 12px;
 }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 34px;
-}
+h1 { margin: 0 0 8px; font-size: 34px; }
 
 #clock {
-  font-size: 17px;
-  color: #d9d5ff;
   margin: 8px;
+  color: #d9d5ff;
+  font-size: 16px;
 }
 
 .tabs {
@@ -42,52 +39,30 @@ h1 {
   padding: 12px;
 }
 
-.tab {
+.tab, .action {
   border: 1px solid #8276ff;
-  background: #27204c;
+  border-radius: 11px;
+  padding: 12px 17px;
+  font-size: 15px;
   color: white;
-  border-radius: 12px;
-  padding: 12px 22px;
-  font-size: 16px;
   cursor: pointer;
+  text-decoration: none;
+  background: #29234e;
 }
 
-.tab.active {
+.tab.active, .action {
   background: #7057ff;
 }
 
-.panel {
-  display: none;
-  padding: 8px 12px 18px;
-}
-
-.panel.active {
-  display: block;
-}
+.panel { display: none; padding: 8px 12px 18px; }
+.panel.active { display: block; }
 
 .toolbar {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 9px;
   margin: 6px auto 12px;
-}
-
-.action {
-  display: inline-block;
-  border: none;
-  border-radius: 10px;
-  background: #7057ff;
-  color: white;
-  padding: 12px 16px;
-  font-size: 15px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.action.secondary {
-  background: #29234e;
-  border: 1px solid #8276ff;
 }
 
 .viewer {
@@ -98,6 +73,7 @@ h1 {
   border-radius: 14px;
   overflow: hidden;
   background: white;
+  position: relative;
 }
 
 .viewer iframe {
@@ -108,47 +84,7 @@ h1 {
   background: white;
 }
 
-/* Full-screen viewer */
-.viewer:fullscreen {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  border: 0;
-  border-radius: 0;
-  background: white;
-}
-
-.viewer:fullscreen iframe {
-  width: 100%;
-  height: 100%;
-}
-
-.fullscreen-exit {
-  display: none;
-}
-
-.viewer:fullscreen .fullscreen-exit {
-  display: block;
-  position: absolute;
-  z-index: 10;
-  top: 12px;
-  right: 12px;
-}
-
-footer {
-  text-align: center;
-  color: #c8c3f5;
-  padding: 12px;
-  font-size: 12px;
-}
-
-@media (max-width: 600px) {
-  h1 { font-size: 29px; }
-  .viewer { height: 65vh; }
-  .tab { padding: 11px 18px; }
-}
-
-/* iPhone Safari fallback when native fullscreen isn't available */
+.viewer:fullscreen,
 .viewer.fallback-fullscreen {
   position: fixed;
   inset: 0;
@@ -158,20 +94,38 @@ footer {
   min-height: 0;
   border: 0;
   border-radius: 0;
-  background: white;
 }
 
+.viewer:fullscreen iframe,
 .viewer.fallback-fullscreen iframe {
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
-.viewer.fallback-fullscreen .fullscreen-exit {
-  display: block;
+.exit-fullscreen {
+  display: none;
   position: absolute;
+  top: 10px;
+  right: 10px;
   z-index: 10;
-  top: 12px;
-  right: 12px;
+}
+
+.viewer:fullscreen .exit-fullscreen,
+.viewer.fallback-fullscreen .exit-fullscreen {
+  display: block;
+}
+
+footer {
+  padding: 12px;
+  text-align: center;
+  color: #c8c3f5;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 29px; }
+  .viewer { height: 65vh; }
+  .tab, .action { padding: 11px 13px; }
 }
 </style>
 </head>
@@ -193,7 +147,10 @@ footer {
       <button class="action" onclick="goFullscreen('fernViewer')">
         ⛶ Full Screen
       </button>
-      <a class="action secondary"
+      <button class="action" onclick="refreshSite('fernFrame')">
+        🔄 Refresh
+      </button>
+      <a class="tab"
          href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
          target="_blank" rel="noopener">
         Open Fern ↗
@@ -201,11 +158,11 @@ footer {
     </div>
 
     <div class="viewer" id="fernViewer">
-      <button class="action fullscreen-exit"
-              onclick="exitFullscreen('fernViewer')">
+      <button class="action exit-fullscreen"
+        onclick="exitFullscreen('fernViewer')">
         ✕ Exit Full Screen
       </button>
-      <iframe
+      <iframe id="fernFrame"
         src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
         title="Fern" allowfullscreen>
       </iframe>
@@ -217,19 +174,21 @@ footer {
       <button class="action" onclick="goFullscreen('secureViewer')">
         ⛶ Full Screen
       </button>
-      <a class="action secondary"
-         href="https://securedweb.lol/"
+      <button class="action" onclick="refreshSite('secureFrame')">
+        🔄 Refresh
+      </button>
+      <a class="tab" href="https://securedweb.lol/"
          target="_blank" rel="noopener">
         Open SecureWeb ↗
       </a>
     </div>
 
     <div class="viewer" id="secureViewer">
-      <button class="action fullscreen-exit"
-              onclick="exitFullscreen('secureViewer')">
+      <button class="action exit-fullscreen"
+        onclick="exitFullscreen('secureViewer')">
         ✕ Exit Full Screen
       </button>
-      <iframe
+      <iframe id="secureFrame"
         src="https://securedweb.lol/"
         title="SecureWeb" allowfullscreen>
       </iframe>
@@ -259,23 +218,32 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-document.querySelectorAll('.tab').forEach(button => {
+document.querySelectorAll('.tab[data-panel]').forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    document.querySelectorAll('.panel').forEach(panel => {
-      panel.classList.remove('active');
-    });
+    document.querySelectorAll('.tab[data-panel]').forEach(tab =>
+      tab.classList.remove('active')
+    );
+    document.querySelectorAll('.panel').forEach(panel =>
+      panel.classList.remove('active')
+    );
 
     button.classList.add('active');
     document.getElementById(button.dataset.panel).classList.add('active');
   });
 });
 
+function refreshSite(frameId) {
+  const frame = document.getElementById(frameId);
+  try {
+    frame.contentWindow.location.reload();
+  } catch (error) {
+    // Reload the iframe if direct reload is blocked by browser security.
+    frame.src = frame.src;
+  }
+}
+
 async function goFullscreen(id) {
   const viewer = document.getElementById(id);
-
   try {
     if (viewer.requestFullscreen) {
       await viewer.requestFullscreen();
