@@ -2,754 +2,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Google Classroom</title>
   <link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Google Classroom</title>
 
-<style>
-:root {
-  --bg: #0b1020;
-  --panel: #151d33;
-  --panel2: #202b46;
-  --text: #f4f7ff;
-  --muted: #aebbd4;
-  --blue: #57a6ff;
-  --purple: #a879ff;
-}
+  <style>
+    * { box-sizing: border-box; }
 
-* {
-  box-sizing: border-box;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #080e25, #211347, #101b3b);
+      min-height: 100vh;
+    }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
-}
+    header {
+      text-align: center;
+      padding: 28px 14px 12px;
+    }
 
-header {
-  padding: 28px 16px;
-  text-align: center;
-  background: linear-gradient(135deg, #182957, #512b79);
-}
+    header h1 {
+      margin: 0;
+      font-size: clamp(30px, 7vw, 48px);
+      background: linear-gradient(90deg, #77c7ff, #c8a0ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
 
-header h1 {
-  margin: 0;
-  font-size: clamp(32px, 7vw, 52px);
-}
+    header p { color: #c7d5ff; margin-top: 8px; }
 
-header p {
-  color: #e0e8ff;
-  margin-bottom: 0;
-}
+    .clock-card {
+      background: linear-gradient(135deg, #182957, #512b79);
+      border: 1px solid #6078bd;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 14px auto 22px;
+      max-width: 450px;
+      width: calc(100% - 28px);
+      text-align: center;
+    }
 
-nav {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 14px;
-  background: #11182a;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
+    .clock-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #d5ddff;
+    }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  background: var(--panel2);
-  padding: 10px 14px;
-  border-radius: 9px;
-}
+    #arcade-clock {
+      font-size: clamp(32px, 8vw, 48px);
+      font-weight: bold;
+      margin: 8px 0;
+      font-variant-numeric: tabular-nums;
+    }
 
-nav a:hover {
-  background: #34476f;
-}
+    #arcade-date { color: #d5ddff; }
 
-main {
-  width: min(1100px, 100%);
-  margin: auto;
-  padding: 18px;
-}
+    .tabs {
+      display: flex;
+      gap: 10px;
+      padding: 0 14px;
+      max-width: 850px;
+      margin: 0 auto 14px;
+    }
 
-section {
-  margin: 22px 0;
-}
+    .tab-button {
+      flex: 1;
+      padding: 14px 8px;
+      border: 1px solid #5269a5;
+      border-radius: 12px;
+      background: #172345;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-h2 {
-  margin-bottom: 8px;
-}
+    .tab-button.active {
+      background: linear-gradient(135deg, #5268f5, #873fe0);
+      border-color: #b4a7ff;
+    }
 
-.description {
-  color: var(--muted);
-  line-height: 1.5;
-}
+    .panel {
+      max-width: 1000px;
+      width: calc(100% - 28px);
+      margin: 0 auto 30px;
+      padding: 16px;
+      border: 1px solid #465b94;
+      border-radius: 16px;
+      background: rgba(15, 25, 55, 0.95);
+    }
 
-.panel {
-  background: var(--panel);
-  border: 1px solid #2a3857;
-  border-radius: 16px;
-  padding: 16px;
-}
+    .panel h2 { margin-top: 0; font-size: 22px; }
 
-button {
-  cursor: pointer;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px 15px;
-  background: var(--blue);
-  color: #071426;
-  font-size: 15px;
-  font-weight: bold;
-}
+    .description {
+      color: #c5d2f8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
-button:hover {
-  filter: brightness(1.1);
-}
+    .frame-wrap {
+      overflow: hidden;
+      border-radius: 12px;
+      background: #090d19;
+      border: 1px solid #5269a5;
+    }
 
-button.secondary {
-  background: var(--panel2);
-  color: white;
-  border: 1px solid #3a4c70;
-}
+    iframe {
+      display: block;
+      width: 100%;
+      height: 65vh;
+      min-height: 400px;
+      border: 0;
+      background: white;
+    }
 
-.controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 12px 0;
-}
+    .open-link {
+      display: inline-block;
+      margin: 12px 0 4px;
+      padding: 11px 15px;
+      border-radius: 9px;
+      background: #604fe7;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-#site-frame {
-  width: 100%;
-  height: 65vh;
-  min-height: 350px;
-  display: block;
-  background: #080b14;
-  border: 1px solid #354363;
-  border-radius: 12px;
-}
+    .hidden { display: none; }
 
-#site-section.mobile-fullscreen {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
-  margin: 0;
-  padding: 10px;
-  overflow-y: auto;
-  background: var(--bg);
-  border-radius: 0;
-}
-
-#site-section.mobile-fullscreen .panel {
-  border-radius: 0;
-  min-height: 100%;
-}
-
-#site-section.mobile-fullscreen #site-frame {
-  height: 76vh;
-  height: 76dvh;
-  min-height: 250px;
-  border-radius: 8px;
-}
-
-#site-section.mobile-fullscreen .site-heading {
-  font-size: 20px;
-}
-
-#site-section.mobile-fullscreen .description {
-  margin: 6px 0;
-}
-
-#site-section.mobile-fullscreen .controls {
-  margin: 8px 0;
-}
-
-#site-section.mobile-fullscreen #site-note {
-  font-size: 12px;
-}
-
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.game-card {
-  background: var(--panel);
-  border: 1px solid #2a3857;
-  border-radius: 14px;
-  padding: 15px;
-  text-align: center;
-}
-
-.game-card .emoji {
-  font-size: 34px;
-  margin-bottom: 8px;
-}
-
-.game-card h3 {
-  font-size: 16px;
-  margin: 5px 0 12px;
-}
-
-.game-card button {
-  width: 100%;
-}
-
-#mini-game {
-  display: none;
-  margin-top: 18px;
-}
-
-#mini-game.active {
-  display: block;
-}
-
-#game-output {
-  padding: 20px;
-  text-align: center;
-  background: #090e1b;
-  border-radius: 12px;
-  margin-top: 12px;
-  min-height: 120px;
-}
-
-#game-output h3 {
-  font-size: 26px;
-}
-
-#game-output button {
-  margin: 5px;
-}
-
-footer {
-  text-align: center;
-  color: var(--muted);
-  padding: 30px 15px;
-}
-
-body.expanded {
-  overflow: hidden;
-}
-
-@media (max-width: 600px) {
-  main {
-    padding: 12px;
-  }
-
-  header {
-    padding: 24px 12px;
-  }
-
-  #site-frame {
-    height: 58vh;
-    min-height: 300px;
-  }
-
-  .game-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-  
-.clock-card {
-  background: linear-gradient(135deg, #182957, #512b79);
-  border: 1px solid #6078bd;
-  border-radius: 16px;
-  padding: 18px;
-  margin: 18px auto;
-  max-width: 450px;
-  text-align: center;
-  color: white;
-}
-
-.clock-label {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #d5ddff;
-}
-
-#arcade-clock {
-  font-size: clamp(32px, 8vw, 48px);
-  font-weight: bold;
-  margin: 8px 0;
-  font-variant-numeric: tabular-nums;
-}
-
-#arcade-date {
-  color: #d5ddff;
-}
-
-</style>
+    footer {
+      text-align: center;
+      color: #9eadd8;
+      padding: 10px 15px 28px;
+      font-size: 12px;
+    }
+  </style>
 </head>
 
 <body>
+  <header>
+    <h1>🎮 Arcade Corner</h1>
+    <p>Your gaming corner. Pick a tab and have fun!</p>
+  </header>
 
-<header>
-  <h1>🎮 Arcade Corner</h1>
-  <p>Your corner of the internet for games and fun.</p>
-</header>
-  
-<div class="clock-card">
-  <div class="clock-label">🕒 YOUR LOCAL TIME</div>
-  <div id="arcade-clock">Loading...</div>
-  <div id="arcade-date"></div>
-</div>
+  <div class="clock-card">
+    <div class="clock-label">🕒 YOUR LOCAL TIME</div>
+    <div id="arcade-clock">Loading...</div>
+    <div id="arcade-date"></div>
+  </div>
 
+  <nav class="tabs">
+    <button class="tab-button active" id="game-tab"
+      onclick="showTab('games')">🎮 Game Website</button>
+    <button class="tab-button" id="secure-tab"
+      onclick="showTab('secure')">🌐 SecureWeb</button>
+  </nav>
 
-<nav>
-  <a href="#play">Play Now</a>
-  <a href="#games">Mini Games</a>
-  <a href="#about">About</a>
-</nav>
-
-<main>
-
-<section id="play">
-  <div id="site-section">
-    <div class="panel">
-      <h2 class="site-heading">🕹️ Play Games</h2>
+  <main>
+    <section class="panel" id="games-panel">
+      <h2>🎮 Game Website</h2>
       <p class="description">
-        Use the game window below. If it doesn't load, try opening the website
-        directly.
+        Try the original game website below. If it does not load,
+        use the Open Game Website button.
       </p>
 
-      <div class="controls">
-        <button id="fullscreen-button" type="button"
-          onclick="toggleFullscreen()">
-          ⛶ Expand Screen
-        </button>
-
-        <button class="secondary" type="button"
-          onclick="openSite()">
-          Open Website
-        </button>
-
-        <button class="secondary" type="button"
-          onclick="reloadSite()">
-          Reload
-        </button>
+      <div class="frame-wrap">
+        <iframe
+          src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
+          title="Game Website"
+          allowfullscreen>
+        </iframe>
       </div>
 
-      <iframe
-        id="site-frame"
-        title="Arcade Corner game website"
-        src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
-        allow="fullscreen; autoplay; gamepad; clipboard-read; clipboard-write"
-        allowfullscreen
-        loading="lazy">
-      </iframe>
+      <a class="open-link"
+        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
+        target="_blank" rel="noopener noreferrer">
+        Open Game Website ↗
+      </a>
+    </section>
 
-      <p class="description" id="site-note" aria-live="polite">
-        Tap Expand Screen to make the game window as large as your screen
-        allows. Tap the button again to exit expanded mode.
+    <section class="panel hidden" id="secure-panel">
+      <h2>🌐 SecureWeb</h2>
+      <p class="description">
+        Try SecureWeb below. If it cannot display inside this page,
+        use the button to open the website separately.
       </p>
-    </div>
-  </div>
-</section>
 
-<section id="games">
-  <h2>🎯 Mini Games</h2>
-  <p class="description">
-    Choose a mini game to play right here on Arcade Corner.
-  </p>
+      <div class="frame-wrap">
+        <iframe
+          src="https://securedweb.lol/"
+          title="SecureWeb">
+        </iframe>
+      </div>
 
-  <div class="game-grid" id="game-grid"></div>
+      <a class="open-link"
+        href="https://securedweb.lol/"
+        target="_blank" rel="noopener noreferrer">
+        Open SecureWeb ↗
+      </a>
+    </section>
+  </main>
 
-  <div class="panel" id="mini-game">
-    <h2 id="game-title">Mini Game</h2>
-    <p class="description" id="game-instructions"></p>
-    <div id="game-output"></div>
-    <div class="controls">
-      <button class="secondary" onclick="closeGame()">Close Game</button>
-    </div>
-  </div>
-</section>
+  <footer>Arcade Corner · Enjoy your games!</footer>
 
-<section id="about">
-  <div class="panel">
-    <h2>ℹ️ About Arcade Corner</h2>
-    <p class="description">
-      Arcade Corner is a simple place to find games and have fun.
-      Some external websites may not work inside an embedded window.
-      If a game doesn't load, use its Open Website button when available.
-    </p>
-  </div>
-</section>
+  <script>
+    function showTab(tab) {
+      const gamesPanel = document.getElementById("games-panel");
+      const securePanel = document.getElementById("secure-panel");
+      const gameTab = document.getElementById("game-tab");
+      const secureTab = document.getElementById("secure-tab");
 
-</main>
+      gamesPanel.classList.toggle("hidden", tab !== "games");
+      securePanel.classList.toggle("hidden", tab !== "secure");
+      gameTab.classList.toggle("active", tab === "games");
+      secureTab.classList.toggle("active", tab === "secure");
+    }
 
-<footer>
-  Arcade Corner • Have fun and play fair!
-</footer>
+    function updateArcadeClock() {
+      const now = new Date();
 
-<script>
-const externalSite =
-  'https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22';
+      document.getElementById("arcade-clock").textContent =
+        now.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit"
+        });
 
-const siteSection = document.getElementById('site-section');
-const fullscreenButton = document.getElementById('fullscreen-button');
+      document.getElementById("arcade-date").textContent =
+        now.toLocaleDateString([], {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        });
+    }
 
-function toggleFullscreen() {
-  const expanded = siteSection.classList.toggle('mobile-fullscreen');
-
-  document.body.classList.toggle('expanded', expanded);
-
-  fullscreenButton.textContent = expanded
-    ? '✕ Exit Expanded Screen'
-    : '⛶ Expand Screen';
-
-  document.getElementById('site-note').textContent = expanded
-    ? 'Expanded mode is on. Tap Exit Expanded Screen to return.'
-    : 'Expanded mode is off.';
-}
-
-function openSite() {
-  window.open(externalSite, '_blank', 'noopener,noreferrer');
-}
-
-function reloadSite() {
-  const frame = document.getElementById('site-frame');
-  frame.src = externalSite;
-}
-
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape' &&
-      siteSection.classList.contains('mobile-fullscreen')) {
-    toggleFullscreen();
-  }
-});
-
-/* Mini games */
-const games = [
-  {name:'Click Challenge', emoji:'🖱️', type:'click'},
-  {name:'Guess the Number', emoji:'🔢', type:'guess'},
-  {name:'Rock Paper Scissors', emoji:'✊', type:'rps'},
-  {name:'Quick Math', emoji:'➗', type:'math'},
-  {name:'Reaction Test', emoji:'⚡', type:'reaction'},
-  {name:'Coin Flip', emoji:'🪙', type:'coin'},
-  {name:'Dice Roll', emoji:'🎲', type:'dice'},
-  {name:'Higher or Lower', emoji:'📈', type:'higher'},
-  {name:'Lucky Number', emoji:'🍀', type:'lucky'},
-  {name:'Memory Challenge', emoji:'🧠', type:'memory'},
-  {name:'Color Pick', emoji:'🎨', type:'color'},
-  {name:'Typing Challenge', emoji:'⌨️', type:'typing'},
-  {name:'Even or Odd', emoji:'🔀', type:'evenodd'},
-  {name:'Number Sprint', emoji:'🏁', type:'sprint'},
-  {name:'Mini Quiz', emoji:'❓', type:'quiz'},
-  {name:'Target 20', emoji:'🎯', type:'target'},
-  {name:'Heads or Tails', emoji:'🪙', type:'coin'},
-  {name:'Fast Fingers', emoji:'👆', type:'click'},
-  {name:'Math Sprint', emoji:'➕', type:'math'},
-  {name:'Dice Duel', emoji:'⚔️', type:'dice'},
-  {name:'Mystery Number', emoji:'🕵️', type:'guess'},
-  {name:'Odd One Out', emoji:'🧩', type:'memory'},
-  {name:'Lucky Roll', emoji:'🎰', type:'dice'},
-  {name:'Quick Choice', emoji:'🤔', type:'rps'}
-];
-
-const grid = document.getElementById('game-grid');
-
-games.forEach((game, index) => {
-  const card = document.createElement('div');
-  card.className = 'game-card';
-  card.innerHTML = `
-    <div class="emoji">${game.emoji}</div>
-    <h3>${game.name}</h3>
-    <button type="button" onclick="startGame(${index})">Play</button>
-  `;
-  grid.appendChild(card);
-});
-
-let currentGame = null;
-let clickCount = 0;
-let clickTimer = null;
-let reactionStart = 0;
-let reactionTimer = null;
-let secretNumber = 0;
-let previousNumber = 0;
-let targetScore = 0;
-
-function startGame(index) {
-  currentGame = games[index];
-  document.getElementById('mini-game').classList.add('active');
-  document.getElementById('game-title').textContent =
-    currentGame.emoji + ' ' + currentGame.name;
-
-  const instructions = document.getElementById('game-instructions');
-  const output = document.getElementById('game-output');
-
-  clearTimeout(clickTimer);
-  clearTimeout(reactionTimer);
-
-  if (currentGame.type === 'click') {
-    clickCount = 0;
-    instructions.textContent = 'Tap the button as many times as you can in 10 seconds.';
-    output.innerHTML = '<h3 id="click-count">0</h3><p>Clicks</p><button onclick="clickGame()">TAP!</button><p id="click-status">Press Start to begin.</p><button class="secondary" onclick="startClickGame()">Start</button>';
-  } else if (currentGame.type === 'guess') {
-    secretNumber = Math.floor(Math.random() * 20) + 1;
-    instructions.textContent = 'Guess a number from 1 to 20.';
-    output.innerHTML = '<input id="guess-input" type="number" min="1" max="20" placeholder="Your guess"><button onclick="checkGuess()">Guess</button><p id="guess-status">Good luck!</p><button class="secondary" onclick="startGame(' + index + ')">New Number</button>';
-  } else if (currentGame.type === 'rps') {
-    instructions.textContent = 'Choose rock, paper, or scissors.';
-    output.innerHTML = '<button onclick="playRPS(\'Rock\')">✊ Rock</button><button onclick="playRPS(\'Paper\')">✋ Paper</button><button onclick="playRPS(\'Scissors\')">✌️ Scissors</button><h3 id="rps-status">Ready?</h3>';
-  } else if (currentGame.type === 'math') {
-    newMath();
-  } else if (currentGame.type === 'reaction') {
-    instructions.textContent = 'Tap the button only when it says TAP!';
-    output.innerHTML = '<h3 id="reaction-status">Ready?</h3><button id="reaction-button" onclick="reactionClick()">Start</button>';
-  } else if (currentGame.type === 'coin') {
-    instructions.textContent = 'Flip a coin and see what you get.';
-    output.innerHTML = '<h3 id="coin-result">🪙</h3><button onclick="flipCoin()">Flip Coin</button>';
-  } else if (currentGame.type === 'dice') {
-    instructions.textContent = 'Roll the dice!';
-    output.innerHTML = '<h3 id="dice-result">🎲</h3><button onclick="rollDice()">Roll</button>';
-  } else if (currentGame.type === 'higher') {
-    previousNumber = Math.floor(Math.random() * 10) + 1;
-    instructions.textContent = 'Will the next number be higher or lower?';
-    output.innerHTML = '<h3 id="higher-number">' + previousNumber + '</h3><button onclick="higherLower(\'higher\')">Higher</button><button onclick="higherLower(\'lower\')">Lower</button><p id="higher-status"></p>';
-  } else if (currentGame.type === 'lucky') {
-    instructions.textContent = 'Pick a number from 1 to 10.';
-    output.innerHTML = '<input id="lucky-input" type="number" min="1" max="10" placeholder="1–10"><button onclick="luckyPick()">Pick</button><p id="lucky-status"></p>';
-  } else if (currentGame.type === 'memory') {
-    instructions.textContent = 'Memorize this number, then type it back.';
-    const number = Math.floor(Math.random() * 900) + 100;
-    output.innerHTML = '<h3 id="memory-number">' + number + '</h3><input id="memory-input" placeholder="Type the number"><button onclick="checkMemory(' + number + ')">Check</button><p id="memory-status"></p>';
-    setTimeout(() => {
-      const n = document.getElementById('memory-number');
-      if (n) n.textContent = '???';
-    }, 1800);
-  } else if (currentGame.type === 'color') {
-    const colors = ['Red', 'Blue', 'Green', 'Purple'];
-    const answer = colors[Math.floor(Math.random() * colors.length)];
-    instructions.textContent = 'Pick the color chosen by the game.';
-    output.innerHTML = colors.map(c =>
-      '<button onclick="colorGuess(\'' + c + '\',\'' + answer + '\')">' + c + '</button>'
-    ).join('') + '<p id="color-status"></p>';
-  } else if (currentGame.type === 'typing') {
-    const word = ['arcade','gaming','rocket','victory','pixel'][Math.floor(Math.random()*5)];
-    instructions.textContent = 'Type this word exactly: ' + word;
-    output.innerHTML = '<input id="typing-input" placeholder="Type here"><button onclick="checkTyping(\'' + word + '\')">Check</button><p id="typing-status"></p>';
-  } else if (currentGame.type === 'evenodd') {
-    const n = Math.floor(Math.random() * 100) + 1;
-    instructions.textContent = 'Is this number even or odd?';
-    output.innerHTML = '<h3>' + n + '</h3><button onclick="checkEvenOdd(' + n + ',\'even\')">Even</button><button onclick="checkEvenOdd(' + n + ',\'odd\')">Odd</button><p id="evenodd-status"></p>';
-  } else if (currentGame.type === 'sprint') {
-    targetScore = 0;
-    instructions.textContent = 'Reach 15 points by tapping the button.';
-    output.innerHTML = '<h3 id="sprint-score">0 / 15</h3><button onclick="sprintTap()">TAP FOR POINTS</button><p id="sprint-status"></p>';
-  } else if (currentGame.type === 'quiz') {
-    instructions.textContent = 'What is the largest planet in our solar system?';
-    output.innerHTML = '<button onclick="quizAnswer(\'Mars\')">Mars</button><button onclick="quizAnswer(\'Jupiter\')">Jupiter</button><button onclick="quizAnswer(\'Earth\')">Earth</button><p id="quiz-status"></p>';
-  } else if (currentGame.type === 'target') {
-    targetScore = 0;
-    instructions.textContent = 'Try to get exactly 20 points. Each tap adds 1–5 points.';
-    output.innerHTML = '<h3 id="target-score">0 / 20</h3><button onclick="targetTap()">Tap for points</button><p id="target-status"></p><button class="secondary" onclick="startGame(' + index + ')">Restart</button>';
-  }
-
-  document.getElementById('mini-game').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-function closeGame() {
-  document.getElementById('mini-game').classList.remove('active');
-  clearTimeout(clickTimer);
-  clearTimeout(reactionTimer);
-}
-
-function startClickGame() {
-  clickCount = 0;
-  const count = document.getElementById('click-count');
-  const status = document.getElementById('click-status');
-  if (count) count.textContent = '0';
-  if (status) status.textContent = 'Go! 10 seconds!';
-  clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => {
-    if (status) status.textContent = 'Time is up! You got ' + clickCount + ' clicks.';
-    const buttons = document.querySelectorAll('#game-output button');
-    buttons.forEach(b => { if (b.textContent === 'TAP!') b.disabled = true; });
-  }, 10000);
-  const buttons = document.querySelectorAll('#game-output button');
-  buttons.forEach(b => { if (b.textContent === 'TAP!') b.disabled = false; });
-}
-
-function clickGame() {
-  clickCount++;
-  const count = document.getElementById('click-count');
-  if (count) count.textContent = clickCount;
-}
-
-function checkGuess() {
-  const guess = Number(document.getElementById('guess-input').value);
-  const status = document.getElementById('guess-status');
-  if (!guess || guess < 1 || guess > 20) {
-    status.textContent = 'Enter a number from 1 to 20.';
-  } else if (guess === secretNumber) {
-    status.textContent = 'Correct! You got it!';
-  } else {
-    status.textContent = guess < secretNumber ? 'Too low! Try again.' : 'Too high! Try again.';
-  }
-}
-
-function playRPS(player) {
-  const choices = ['Rock', 'Paper', 'Scissors'];
-  const computer = choices[Math.floor(Math.random() * 3)];
-  let result = '';
-  if (player === computer) result = "It's a tie!";
-  else if (
-    (player === 'Rock' && computer === 'Scissors') ||
-    (player === 'Paper' && computer === 'Rock') ||
-    (player === 'Scissors' && computer === 'Paper')
-  ) result = 'You win!';
-  else result = 'Computer wins!';
-  document.getElementById('rps-status').textContent =
-    'You: ' + player + ' • Computer: ' + computer + ' • ' + result;
-}
-
-function newMath() {
-  const a = Math.floor(Math.random() * 12) + 1;
-  const b = Math.floor(Math.random() * 12) + 1;
-  const answer = a + b;
-  document.getElementById('game-instructions').textContent = 'Solve this addition problem.';
-  document.getElementById('game-output').innerHTML =
-    '<h3>' + a + ' + ' + b + ' = ?</h3><input id="math-input" type="number" placeholder="Answer"><button onclick="checkMath(' + answer + ')">Check</button><p id="math-status"></p><button class="secondary" onclick="newMath()">New Problem</button>';
-}
-
-function checkMath(answer) {
-  const guess = Number(document.getElementById('math-input').value);
-  document.getElementById('math-status').textContent =
-    guess === answer ? 'Correct! 🎉' : 'Not quite. Try again!';
-}
-
-function reactionClick() {
-  const button = document.getElementById('reaction-button');
-  const status = document.getElementById('reaction-status');
-  if (button.textContent === 'Start' || button.textContent === 'Try Again') {
-    button.textContent = 'Wait...';
-    button.disabled = true;
-    status.textContent = 'Wait for TAP!';
-    clearTimeout(reactionTimer);
-    reactionTimer = setTimeout(() => {
-      reactionStart = Date.now();
-      button.textContent = 'TAP!';
-      button.disabled = false;
-    }, 1200 + Math.random() * 2800);
-  } else if (button.textContent === 'TAP!') {
-    status.textContent = 'Your reaction time: ' + (Date.now() - reactionStart) + ' ms!';
-    button.textContent = 'Try Again';
-  } else if (button.textContent === 'Wait...') {
-    clearTimeout(reactionTimer);
-    status.textContent = 'Too early! Try again.';
-    button.disabled = false;
-    button.textContent = 'Try Again';
-  }
-}
-
-function flipCoin() {
-  document.getElementById('coin-result').textContent =
-    Math.random() < 0.5 ? '🪙 Heads!' : '🪙 Tails!';
-}
-
-function rollDice() {
-  const n = Math.floor(Math.random() * 6) + 1;
-  document.getElementById('dice-result').textContent = '🎲 You rolled ' + n + '!';
-}
-
-function higherLower(choice) {
-  const next = Math.floor(Math.random() * 10) + 1;
-  const old = previousNumber;
-  let result = next === old ? 'Same number! Try again.' :
-    ((choice === 'higher' && next > old) || (choice === 'lower' && next < old))
-    ? 'Correct! 🎉' : 'Not this time!';
-  previousNumber = next;
-  document.getElementById('higher-number').textContent = next;
-  document.getElementById('higher-status').textContent =
-    old + ' → ' + next + '. ' + result;
-}
-
-function luckyPick() {
-  const guess = Number(document.getElementById('lucky-input').value);
-  const answer = Math.floor(Math.random() * 10) + 1;
-  document.getElementById('lucky-status').textContent =
-    guess === answer ? 'Lucky! You matched ' + answer + '!' :
-    'The number was ' + answer + '. Try again!';
-}
-
-function checkMemory(number) {
-  document.getElementById('memory-status').textContent =
-    document.getElementById('memory-input').value === String(number)
-    ? 'Amazing memory! Correct!' : 'Not quite. The number was ' + number + '.';
-}
-
-function colorGuess(choice, answer) {
-  document.getElementById('color-status').textContent =
-    choice === answer ? 'Correct color! 🎨' : 'Nope! It was ' + answer + '.';
-}
-
-function checkTyping(word) {
-  document.getElementById('typing-status').textContent =
-    document.getElementById('typing-input').value === word
-    ? 'Perfect typing! ⌨️' : 'Try again. Check the spelling!';
-}
-
-function checkEvenOdd(n, choice) {
-  const correct = n % 2 === 0 ? 'even' : 'odd';
-  document.getElementById('evenodd-status').textContent =
-    choice === correct ? 'Correct! 🎉' : 'Incorrect! It is ' + correct + '.';
-}
-
-function sprintTap() {
-  if (targetScore >= 15) return;
-  targetScore++;
-  document.getElementById('sprint-score').textContent = targetScore + ' / 15';
-  if (targetScore >= 15) document.getElementById('sprint-status').textContent = 'You won! 🏁';
-}
-
-function quizAnswer(answer) {
-  document.getElementById('quiz-status').textContent =
-    answer === 'Jupiter' ? 'Correct! Jupiter is the largest planet.' : 'Not quite. The answer is Jupiter.';
-}
-
-function targetTap() {
-  if (targetScore >= 20) return;
-  const points = Math.floor(Math.random() * 5) + 1;
-  targetScore += points;
-  document.getElementById('target-score').textContent = targetScore + ' / 20';
-  document.getElementById('target-status').textContent =
-    targetScore === 20 ? 'Perfect score! 🎯' :
-    targetScore > 20 ? 'Over 20! Restart to try again.' :
-    'You gained ' + points + ' points!';
-}
-  
-function updateArcadeClock() {
-  const now = new Date();
-
-  document.getElementById("arcade-clock").textContent =
-    now.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit"
-    });
-
-  document.getElementById("arcade-date").textContent =
-    now.toLocaleDateString([], {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric"
-    });
-}
-
-updateArcadeClock();
-setInterval(updateArcadeClock, 1000);
-
-</script>
-
+    updateArcadeClock();
+    setInterval(updateArcadeClock, 1000);
+  </script>
 </body>
 </html>
