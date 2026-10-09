@@ -42,7 +42,6 @@ button, .action {
 }
 
 .tab.active, .action.primary { background: #7057ff; }
-
 .panel { display: none; padding: 8px 12px 18px; }
 .panel.active { display: block; }
 
@@ -73,7 +72,6 @@ button, .action {
   background: white;
 }
 
-/* Full-screen layout */
 .viewer:fullscreen,
 .viewer.fallback-fullscreen {
   position: fixed;
@@ -93,10 +91,7 @@ button, .action {
   height: 100%;
 }
 
-/* Small controls in the corner during full screen */
-.fullscreen-controls {
-  display: none;
-}
+.fullscreen-controls { display: none; }
 
 .viewer:fullscreen .fullscreen-controls,
 .viewer.fallback-fullscreen .fullscreen-controls {
@@ -109,39 +104,30 @@ button, .action {
   z-index: 10000;
   padding: 5px;
   border-radius: 12px;
-  background: rgba(25, 20, 55, 0.82);
-  opacity: 0.35;
-  transition: opacity 0.2s;
+  background: rgba(25, 20, 55, 0.88);
+  opacity: 0.4;
 }
 
-.viewer:fullscreen .fullscreen-controls:hover,
 .viewer:fullscreen .fullscreen-controls:focus-within,
-.viewer.fallback-fullscreen .fullscreen-controls:hover,
 .viewer.fallback-fullscreen .fullscreen-controls:focus-within {
   opacity: 1;
 }
 
 .logo {
   font-size: 21px;
-  line-height: 1;
   padding: 7px;
   border: 0;
   background: transparent;
 }
 
-.mini-button {
+.mini-button, .exit-button {
   padding: 8px 10px;
   font-size: 17px;
   border: 0;
-  background: #7057ff;
 }
 
-.exit-button {
-  padding: 8px 10px;
-  font-size: 17px;
-  border: 0;
-  background: #29234e;
-}
+.mini-button { background: #7057ff; }
+.exit-button { background: #29234e; }
 
 footer {
   padding: 12px;
@@ -167,30 +153,22 @@ footer {
 <nav class="tabs">
   <button class="tab active" data-panel="fern">🌿 Fern</button>
   <button class="tab" data-panel="secureweb">🌐 SecureWeb</button>
+  <button class="tab" data-panel="eaglercraft">⛏️ Eaglercraft</button>
 </nav>
 
 <main>
   <section class="panel active" id="fern">
     <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('fernViewer')">
-        ⛶ Full Screen
-      </button>
-      <button class="action" onclick="refreshSite('fernFrame')">
-        🔄 Refresh
-      </button>
+      <button class="action primary" onclick="goFullscreen('fernViewer')">⛶ Full Screen</button>
+      <button class="action" onclick="refreshSite('fernFrame')">🔄 Refresh</button>
       <a class="action" target="_blank" rel="noopener"
-        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22">
-        Open Fern ↗
-      </a>
+        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22">Open Fern ↗</a>
     </div>
-
     <div class="viewer" id="fernViewer">
       <div class="fullscreen-controls">
-        <span class="logo" aria-label="Arcade Corner logo">🎮</span>
-        <button class="mini-button" onclick="refreshSite('fernFrame')"
-          aria-label="Refresh Fern" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('fernViewer')"
-          aria-label="Exit full screen" title="Exit full screen">✕</button>
+        <span class="logo">🎮</span>
+        <button class="mini-button" onclick="refreshSite('fernFrame')" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('fernViewer')" title="Exit full screen">✕</button>
       </div>
       <iframe id="fernFrame"
         src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
@@ -200,28 +178,37 @@ footer {
 
   <section class="panel" id="secureweb">
     <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('secureViewer')">
-        ⛶ Full Screen
-      </button>
-      <button class="action" onclick="refreshSite('secureFrame')">
-        🔄 Refresh
-      </button>
-      <a class="action" href="https://securedweb.lol/"
-        target="_blank" rel="noopener">
-        Open SecureWeb ↗
-      </a>
+      <button class="action primary" onclick="goFullscreen('secureViewer')">⛶ Full Screen</button>
+      <button class="action" onclick="refreshSite('secureFrame')">🔄 Refresh</button>
+      <a class="action" href="https://securedweb.lol/" target="_blank" rel="noopener">Open SecureWeb ↗</a>
     </div>
-
     <div class="viewer" id="secureViewer">
       <div class="fullscreen-controls">
-        <span class="logo" aria-label="Arcade Corner logo">🎮</span>
-        <button class="mini-button" onclick="refreshSite('secureFrame')"
-          aria-label="Refresh SecureWeb" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('secureViewer')"
-          aria-label="Exit full screen" title="Exit full screen">✕</button>
+        <span class="logo">🎮</span>
+        <button class="mini-button" onclick="refreshSite('secureFrame')" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('secureViewer')" title="Exit full screen">✕</button>
       </div>
       <iframe id="secureFrame" src="https://securedweb.lol/"
         title="SecureWeb" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <section class="panel" id="eaglercraft">
+    <div class="toolbar">
+      <button class="action primary" onclick="goFullscreen('eaglerViewer')">⛶ Full Screen</button>
+      <button class="action" onclick="refreshSite('eaglerFrame')">🔄 Refresh</button>
+      <a class="action" href="https://eaglercraft.com/play?version=26.2"
+        target="_blank" rel="noopener">Open Eaglercraft ↗</a>
+    </div>
+    <div class="viewer" id="eaglerViewer">
+      <div class="fullscreen-controls">
+        <span class="logo">🎮</span>
+        <button class="mini-button" onclick="refreshSite('eaglerFrame')" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('eaglerViewer')" title="Exit full screen">✕</button>
+      </div>
+      <iframe id="eaglerFrame"
+        src="https://eaglercraft.com/play?version=26.2"
+        title="Eaglercraft" allowfullscreen></iframe>
     </div>
   </section>
 </main>
@@ -232,15 +219,10 @@ footer {
 function updateClock() {
   const now = new Date();
   const time = now.toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit',
-    second: '2-digit'
+    hour: 'numeric', minute: '2-digit', second: '2-digit'
   });
   const date = now.toLocaleDateString([], {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
   });
   document.getElementById('clock').textContent = time + ' • ' + date;
 }
@@ -263,9 +245,9 @@ document.querySelectorAll('.tab[data-panel]').forEach(button => {
 
 function refreshSite(frameId) {
   const frame = document.getElementById(frameId);
-  const currentSrc = frame.src;
+  const originalSrc = frame.src;
   frame.src = 'about:blank';
-  frame.src = currentSrc;
+  frame.src = originalSrc;
 }
 
 async function goFullscreen(id) {
