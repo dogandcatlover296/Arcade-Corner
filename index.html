@@ -146,14 +146,14 @@ footer {
 
 <body>
 <header>
-  <h1>🎮 Arcade Corner</h1>
+  <h1>❄️ Freeze Nova</h1>
   <div id="clock">Loading clock...</div>
 </header>
 
 <nav class="tabs">
   <button class="tab active" data-panel="fern">🌿 Fern</button>
   <button class="tab" data-panel="secureweb">🌐 SecureWeb</button>
-  <button class="tab" data-panel="eaglercraft">⛏️ Eaglercraft</button>
+  <button class="tab" data-panel="unblocked">🎮 Unblocked Games</button>
 </nav>
 
 <main>
@@ -166,7 +166,7 @@ footer {
     </div>
     <div class="viewer" id="fernViewer">
       <div class="fullscreen-controls">
-        <span class="logo">🎮</span>
+        <span class="logo">❄️</span>
         <button class="mini-button" onclick="refreshSite('fernFrame')" title="Refresh">🔄</button>
         <button class="exit-button" onclick="exitFullscreen('fernViewer')" title="Exit full screen">✕</button>
       </div>
@@ -184,7 +184,7 @@ footer {
     </div>
     <div class="viewer" id="secureViewer">
       <div class="fullscreen-controls">
-        <span class="logo">🎮</span>
+        <span class="logo">❄️</span>
         <button class="mini-button" onclick="refreshSite('secureFrame')" title="Refresh">🔄</button>
         <button class="exit-button" onclick="exitFullscreen('secureViewer')" title="Exit full screen">✕</button>
       </div>
@@ -193,27 +193,27 @@ footer {
     </div>
   </section>
 
-  <section class="panel" id="eaglercraft">
+  <section class="panel" id="unblocked">
     <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('eaglerViewer')">⛶ Full Screen</button>
-      <button class="action" onclick="refreshSite('eaglerFrame')">🔄 Refresh</button>
-      <a class="action" href="https://eaglercraft.com/play?version=26.2"
-        target="_blank" rel="noopener">Open Eaglercraft ↗</a>
+      <button class="action primary" onclick="goFullscreen('unblockedViewer')">⛶ Full Screen</button>
+      <button class="action" onclick="refreshSite('unblockedFrame')">🔄 Refresh</button>
+      <a class="action" href="https://unblocked-games.s3.amazonaws.com/index.html"
+        target="_blank" rel="noopener">Open Unblocked Games ↗</a>
     </div>
-    <div class="viewer" id="eaglerViewer">
+    <div class="viewer" id="unblockedViewer">
       <div class="fullscreen-controls">
-        <span class="logo">🎮</span>
-        <button class="mini-button" onclick="refreshSite('eaglerFrame')" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('eaglerViewer')" title="Exit full screen">✕</button>
+        <span class="logo">❄️</span>
+        <button class="mini-button" onclick="refreshSite('unblockedFrame')" title="Refresh">🔄</button>
+        <button class="exit-button" onclick="exitFullscreen('unblockedViewer')" title="Exit full screen">✕</button>
       </div>
-      <iframe id="eaglerFrame"
-        src="https://eaglercraft.com/play?version=26.2"
-        title="Eaglercraft" allowfullscreen></iframe>
+      <iframe id="unblockedFrame"
+        src="https://unblocked-games.s3.amazonaws.com/index.html"
+        title="Unblocked Games" allowfullscreen></iframe>
     </div>
   </section>
 </main>
 
-<footer>Arcade Corner • Have fun!</footer>
+<footer>Freeze Nova • Have fun!</footer>
 
 <script>
 function updateClock() {
