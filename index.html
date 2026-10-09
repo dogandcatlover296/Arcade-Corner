@@ -257,6 +257,35 @@ body.expanded {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+  
+.clock-card {
+  background: linear-gradient(135deg, #182957, #512b79);
+  border: 1px solid #6078bd;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 18px auto;
+  max-width: 450px;
+  text-align: center;
+  color: white;
+}
+
+.clock-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #d5ddff;
+}
+
+#arcade-clock {
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: bold;
+  margin: 8px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+#arcade-date {
+  color: #d5ddff;
+}
+
 </style>
 </head>
 
@@ -266,6 +295,13 @@ body.expanded {
   <h1>🎮 Arcade Corner</h1>
   <p>Your corner of the internet for games and fun.</p>
 </header>
+  
+<div class="clock-card">
+  <div class="clock-label">🕒 YOUR LOCAL TIME</div>
+  <div id="arcade-clock">Loading...</div>
+  <div id="arcade-date"></div>
+</div>
+
 
 <nav>
   <a href="#play">Play Now</a>
@@ -689,6 +725,29 @@ function targetTap() {
     targetScore > 20 ? 'Over 20! Restart to try again.' :
     'You gained ' + points + ' points!';
 }
+  
+function updateArcadeClock() {
+  const now = new Date();
+
+  document.getElementById("arcade-clock").textContent =
+    now.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+
+  document.getElementById("arcade-date").textContent =
+    now.toLocaleDateString([], {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+}
+
+updateArcadeClock();
+setInterval(updateArcadeClock, 1000);
+
 </script>
 
 </body>
