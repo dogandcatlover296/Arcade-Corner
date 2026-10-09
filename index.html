@@ -11,7 +11,6 @@
   --text: #fff;
   --muted: #c9c9e8;
   --border: rgba(255,255,255,.16);
-  --panel: rgba(15,19,45,.94);
 }
 * { box-sizing: border-box; }
 
@@ -26,14 +25,8 @@ body {
     #10132b;
 }
 
-header {
-  text-align: center;
-  padding: 22px 12px 16px;
-}
-h1 {
-  margin: 0 0 8px;
-  font-size: clamp(30px, 7vw, 44px);
-}
+header { text-align: center; padding: 22px 12px 16px; }
+h1 { margin: 0 0 8px; font-size: clamp(30px, 7vw, 44px); }
 #clock { color: var(--muted); font-size: 13px; }
 
 main { width: 96%; max-width: 1250px; margin: 0 auto 22px; }
@@ -57,14 +50,13 @@ button, .open-link {
   -webkit-tap-highlight-color: transparent;
 }
 button:active, .open-link:active { background: #5141a4; }
-
 .tab.active { background: #7154dc; border-color: #b7a5ff; }
 
 .viewer {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: var(--panel);
+  background: rgba(15,19,45,.94);
   box-shadow: 0 15px 40px rgba(0,0,0,.3);
 }
 
@@ -108,7 +100,6 @@ footer {
   font-size: 13px;
 }
 
-/* Desktop and browsers that support fullscreen */
 .viewer:fullscreen {
   width: 100%;
   height: 100%;
@@ -124,15 +115,11 @@ footer {
 .viewer:fullscreen .open-link,
 .viewer:fullscreen .hint { display: none; }
 
-/* Full-page fallback for browsers without fullscreen support */
-body.fallback-fullscreen {
-  overflow: hidden;
-}
+body.fallback-fullscreen { overflow: hidden; }
 body.fallback-fullscreen header,
 body.fallback-fullscreen main > .tabs,
-body.fallback-fullscreen footer {
-  display: none;
-}
+body.fallback-fullscreen footer { display: none; }
+
 body.fallback-fullscreen main {
   position: fixed;
   inset: 0;
@@ -147,10 +134,7 @@ body.fallback-fullscreen .viewer {
   border: 0;
   border-radius: 0;
 }
-body.fallback-fullscreen .toolbar {
-  min-height: 48px;
-  padding: 6px;
-}
+body.fallback-fullscreen .toolbar { min-height: 48px; padding: 6px; }
 body.fallback-fullscreen .site-name,
 body.fallback-fullscreen .open-link,
 body.fallback-fullscreen .hint { display: none; }
@@ -180,13 +164,15 @@ body.fallback-fullscreen .frame-wrap {
     <button class="tab active" data-panel="fern">🌿 Fern</button>
     <button class="tab" data-panel="secureweb">🔒 SecureWeb</button>
     <button class="tab" data-panel="unblocked">❄️ Freeze Nova</button>
+    <button class="tab" data-panel="tiktok">🎵 TikTok</button>
   </nav>
 
   <section class="viewer" id="viewer">
     <div class="toolbar">
       <span class="site-name" id="siteName">Fern</span>
       <button id="refreshBtn" type="button">↻ Refresh</button>
-      <a class="open-link" id="openLink" href="#" target="_blank" rel="noopener noreferrer">↗ Open link</a>
+      <a class="open-link" id="openLink" href="#" target="_blank"
+         rel="noopener noreferrer">↗ Open link</a>
       <button id="fullscreenBtn" type="button">⛶ Full Screen</button>
       <button id="exitBtn" type="button" hidden>✕ Exit</button>
     </div>
@@ -195,12 +181,11 @@ body.fallback-fullscreen .frame-wrap {
       <iframe id="siteFrame" title="Fern website"
         allow="fullscreen"
         allowfullscreen
-        webkitallowfullscreen
         loading="eager"></iframe>
     </div>
 
-    <div class="hint">
-      If a website won't load here, try Open link.
+    <div class="hint" id="hint">
+      If a website doesn't load here, try Open link.
     </div>
   </section>
 </main>
@@ -220,6 +205,10 @@ const sites = {
   unblocked: {
     name: "Freeze Nova",
     url: "https://unblocked-games.s3.amazonaws.com/index.html"
+  },
+  tiktok: {
+    name: "TikTok",
+    url: "https://www.tiktok.com/"
   }
 };
 
@@ -230,6 +219,7 @@ const openLink = document.getElementById("openLink");
 const fullscreenBtn = document.getElementById("fullscreenBtn");
 const exitBtn = document.getElementById("exitBtn");
 const refreshBtn = document.getElementById("refreshBtn");
+const hint = document.getElementById("hint");
 const tabs = document.querySelectorAll(".tab");
 
 let currentSite = "fern";
@@ -245,39 +235,15 @@ function selectSite(key) {
   siteName.textContent = site.name;
   openLink.href = site.url;
 
+  hint.textContent = key === "tiktok"
+    ? "TikTok may block loading inside this panel. If it stays blank, tap Open link."
+    : "If a website doesn't load here, try Open link.";
+
   tabs.forEach(tab => {
     const active = tab.dataset.panel === key;
     tab.classList.toggle("active", active);
     tab.setAttribute("aria-pressed", String(active));
   });
-}
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-    leaveFullscreen();
-    selectSite(tab.dataset.panel);
-  });
-});
-
-refreshBtn.addEventListener("click", () => {
-  frame.src = sites[currentSite].url;
-});
-
-async function enterFullscreen() {
-  // Use native fullscreen when the browser supports it.
-  if (viewer.requestFullscreen) {
-    try {
-      await viewer.requestFullscreen();
-      return;
-    } catch (error) {
-      // Continue to the page-sized fallback below.
-    }
-  }
-
-  // iPhone fallback: expand the viewer to fill the webpage.
-  fallbackMode = true;
-  document.body.classList.add("fallback-fullscreen");
-  updateFullscreenButtons();
 }
 
 function leaveFullscreen() {
@@ -293,12 +259,36 @@ function leaveFullscreen() {
   updateFullscreenButtons();
 }
 
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    leaveFullscreen();
+    selectSite(tab.dataset.panel);
+  });
+});
+
+refreshBtn.addEventListener("click", () => {
+  frame.src = sites[currentSite].url;
+});
+
+async function enterFullscreen() {
+  if (viewer.requestFullscreen) {
+    try {
+      await viewer.requestFullscreen();
+      return;
+    } catch (error) {
+      // Use the page-sized fallback below.
+    }
+  }
+
+  fallbackMode = true;
+  document.body.classList.add("fallback-fullscreen");
+  updateFullscreenButtons();
+}
+
 fullscreenBtn.addEventListener("click", enterFullscreen);
 exitBtn.addEventListener("click", leaveFullscreen);
 
-document.addEventListener("fullscreenchange", () => {
-  updateFullscreenButtons();
-});
+document.addEventListener("fullscreenchange", updateFullscreenButtons);
 
 function updateFullscreenButtons() {
   const active = document.fullscreenElement === viewer || fallbackMode;
@@ -309,11 +299,17 @@ function updateFullscreenButtons() {
 function updateClock() {
   const now = new Date();
   const date = now.toLocaleDateString([], {
-    weekday: "long", month: "long", day: "numeric", year: "numeric"
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
   });
   const time = now.toLocaleTimeString([], {
-    hour: "numeric", minute: "2-digit", second: "2-digit"
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit"
   });
+
   document.getElementById("clock").textContent = date + " • " + time;
 }
 
