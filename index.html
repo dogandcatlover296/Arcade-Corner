@@ -1,55 +1,227 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arcade Corner</title>
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Arcade Corner</title>
+
 <style>
-:root{--bg:#101218;--panel:#1d2330;--lime:#c5f36b;--muted:#aab2c3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f6f7fb;font:16px system-ui,sans-serif}header,main{max-width:1050px;margin:auto;padding:24px 18px}.brand{font-size:clamp(30px,5vw,44px);font-weight:900}.brand span{color:var(--lime)}p{color:var(--muted)}form{display:flex;gap:8px;max-width:780px;flex-wrap:wrap}input,select{min-width:0;padding:13px;border-radius:12px;border:0;font-size:16px}input{flex:1}select{background:#fff;color:#15190f}button{cursor:pointer;border:0;border-radius:12px;padding:12px 15px;background:var(--lime);color:#15190f;font-weight:800}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.chip{background:var(--panel);color:white;border:1px solid #343b4d}.chip.active{background:var(--lime);color:#111}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}.card{background:var(--panel);border:1px solid #343b4d;border-radius:16px;padding:16px;display:flex;flex-direction:column;min-height:160px}.emoji{font-size:32px}.card h3{margin:8px 0 3px}.card p{font-size:14px;flex:1}.play{width:100%}.overlay{display:none;position:fixed;inset:0;background:#000c;align-items:center;justify-content:center;padding:12px;z-index:3}.overlay.open{display:flex}.modal{background:var(--panel);padding:18px;border-radius:18px;width:min(700px,100%);max-height:94vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.area{min-height:270px;background:#0b0d12;border-radius:12px;padding:15px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center}.area canvas{max-width:100%;touch-action:manipulation}.area iframe{background:#fff}.area input{max-width:100%}.score{color:var(--lime);font-weight:800}.tic{display:grid;grid-template-columns:repeat(3,70px);gap:5px}.tic button{height:70px;font-size:28px}.memory{display:grid;grid-template-columns:repeat(4,52px);gap:6px}.memory button{height:52px;font-size:23px;background:#30384a;color:white}.foot{font-size:12px;color:var(--muted)}@media(max-width:500px){form{flex-direction:column}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:12px}.tic{grid-template-columns:repeat(3,58px)}.tic button{height:58px}}
-</style></head><body>
-<header><div class="brand"><span>▶</span> Arcade Corner</div><p>Quick games. Big fun. Pick something and play.</p><form id="search" action="https://www.google.com/search" method="get" target="_blank"><input id="q" name="q" type="search" placeholder="Search the web…" aria-label="Search the web" required><select id="engine" aria-label="Search engine"><option value="https://www.google.com/search" selected>Google</option><option value="https://duckduckgo.com/">DuckDuckGo</option><option value="https://www.bing.com/search">Bing</option></select><button type="submit">Search Web ↗</button></form><p><a href="https://www.google.com/" target="_blank" rel="noopener noreferrer" style="color:var(--lime);font-weight:800">Open Google ↗</a> <span style="color:var(--muted)">· Search results open in a new tab.</span></p></header>
-<main><div class="filters" id="filters"></div><h2>Pick a game</h2><div class="grid" id="games"></div><section style="margin-top:30px"><h2>More games from the web</h2><p>These play inside Arcade Corner when the game host allows it. If a game area stays blank, use its <b>Open full game</b> button.</p><div class="grid" id="sites"></div></section><p class="foot">Arcade Corner has built-in games, embeddable web games, and links to external game sites. External sites may have their own ads or rules.</p></main>
-<div class="overlay" id="overlay"><div class="modal"><div class="modalhead"><h2 id="title"></h2><button id="close">✕</button></div><div class="area" id="area"></div></div></div>
+
+body{margin:0;padding:20px;background:#101218;color:white;font-family:Arial,sans-serif}
+
+h1{color:#c5f36b}
+
+section,.game{background:#1d2330;padding:15px;border-radius:14px;margin:12px 0}
+
+input,select,button{padding:12px;border:0;border-radius:8px;margin:4px;font-size:16px;max-width:100%}
+
+button{background:#c5f36b;color:#111;font-weight:bold}
+
+input{width:90%;max-width:400px}
+
+iframe{width:100%;height:60vh;min-height:350px;border:0;background:white;border-radius:10px}
+
+a{color:#c5f36b}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🎮 Arcade Corner</h1>
+
+<p>Quick games. Big fun. Pick something and play!</p>
+
+<section>
+
+<h2>🌐 Search the Web</h2>
+
+<form id="search" target="_blank">
+
+<input id="query" name="q" placeholder="Search anything..." required>
+
+<br>
+
+<select id="engine">
+
+<option value="https://www.google.com/search">Google</option>
+
+<option value="https://duckduckgo.com/">DuckDuckGo</option>
+
+<option value="https://www.bing.com/search">Bing</option>
+
+</select>
+
+<button type="submit">Search Web ↗</button>
+
+</form>
+
+</section>
+
+<section>
+
+<h2>☁️ now.gg</h2>
+
+<p>Try playing here. If it doesn't load, use the button.</p>
+
+<iframe src="https://now.gg/" title="now.gg" allow="fullscreen; autoplay; gamepad"></iframe>
+
+<button onclick="window.open('https://now.gg/','_blank')">Open now.gg ↗</button>
+
+</section>
+
+<section>
+
+<h2>🕹️ Play Games</h2>
+
+<div class="game">
+
+<h3>🔢 Number Guess</h3>
+
+<p>Guess a number from 1 to 100.</p>
+
+<input id="guess" type="number" min="1" max="100" placeholder="Your guess">
+
+<button onclick="checkGuess()">Guess!</button>
+
+<p id="guessResult"></p>
+
+<button onclick="newNumber()">New Number</button>
+
+</div>
+
+<div class="game">
+
+<h3>✊ Rock Paper Scissors</h3>
+
+<button onclick="rps('Rock')">✊ Rock</button>
+
+<button onclick="rps('Paper')">✋ Paper</button>
+
+<button onclick="rps('Scissors')">✌️ Scissors</button>
+
+<p id="rpsResult"></p>
+
+</div>
+
+<div class="game">
+
+<h3>🍪 Cookie Clicker</h3>
+
+<p>Cookies: <strong id="cookies">0</strong></p>
+
+<button onclick="clickCookie()">🍪 Click for cookies!</button>
+
+<button onclick="buyHelper()">Buy helper (10 cookies)</button>
+
+<p id="helperInfo">Helpers: 0</p>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>🎮 More Games</h2>
+
+<p><a href="https://www.crazygames.com/" target="_blank">CrazyGames ↗</a></p>
+
+<p><a href="https://poki.com/" target="_blank">Poki ↗</a></p>
+
+<p><a href="https://tictoe.org/games/same-game" target="_blank">SameGame ↗</a></p>
+
+<p><a href="https://tictoe.org/games/ultimate-tic-tac-toe" target="_blank">Ultimate Tic-Tac-Toe ↗</a></p>
+
+</section>
+
 <script>
-const list=[
-['snake','🐍','Snake','Arcade','Eat dots and avoid crashing.'],
-['pong','🏓','Pong','Arcade','Keep the ball in play against the computer.'],
-['break','🧱','Brick Bouncer','Arcade','Clear the bricks with your ball.'],
-['reaction','⚡','Reaction Test','Skill','Test how fast you can react.'],
-['memory','🧠','Memory Match','Puzzle','Find matching pairs.'],
-['tic','❎','Tic-Tac-Toe','Puzzle','Play X and O with a friend.'],
-['guess','🔢','Number Guess','Puzzle','Guess a number from 1 to 100.'],
-['cookie','🍪','Cookie Clicker','Classic','Click cookies and buy helpers.'],
-['dodge','☄️','Dodge Drop','Skill','Avoid falling rocks.'],
-['rps','✂️','Rock Paper Scissors','Classic','Try to beat the computer.'],
-['flappy','🐤','Flappy Dash','Arcade','Tap or press Space to fly through the gates.'],
-['2048','🔢','2048','Puzzle','Join matching tiles to reach 2048.'],
-['mole','🔨','Whack-a-Mole','Skill','Tap the mole as many times as you can in 20 seconds.'],
-['space','🚀','Space Blaster','Arcade','Blast the incoming aliens. Arrow keys or touch controls.'],
-['web-tic','🌐','Online Tic-Tac-Toe','Web Games','A hosted version with computer play and online rooms, embedded inside Arcade Corner.'],
-['nowgg','☁️','now.gg Cloud Games','External','Open now.gg to explore its cloud gaming library in a new tab.']];
-const cats=['All','Arcade','Puzzle','Skill','Classic','Web Games','External'];let active='All',timer=null,keydown=null;const $=id=>document.getElementById(id);
-$('engine').onchange=()=>{$('search').action=$('engine').value}; $('search').action=$('engine').value;
-cats.forEach(c=>{let b=document.createElement('button');b.textContent=c;b.className='chip'+(c==='All'?' active':'');b.onclick=()=>{active=c;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.textContent===c));render()};$('filters').appendChild(b)});
-function render(){$('games').innerHTML='';list.filter(g=>active==='All'||g[3]===active).forEach(g=>{let d=document.createElement('div');d.className='card';d.innerHTML=`<div class="emoji">${g[1]}</div><h3>${g[2]}</h3><p>${g[4]}</p><button class="play">Play Now</button>`;d.querySelector('button').textContent=g[0]==='nowgg'?'Open now.gg ↗':g[0].startsWith('web-')?'Play Inside ↗':'Play Now';d.querySelector('button').onclick=()=>{if(g[0]==='nowgg'){window.open('https://now.gg/','_blank','noopener,noreferrer');return}open(g[0],g[2])};$('games').appendChild(d)})}render();
-const webSites=[['🟦','SameGame','https://tictoe.org/games/same-game','Match blocks and clear as many as you can.'],['✊','Rock Paper Scissors Online','https://tictoe.org/games/rock-paper-scissors','Challenge the computer or invite a friend.'],['🧠','Ultimate Tic-Tac-Toe','https://tictoe.org/games/ultimate-tic-tac-toe','A much bigger tic-tac-toe strategy game.'],['🏛️','Terni Lapilli','https://tictoe.org/games/terni-lapilli','Try an ancient Roman board game.'],['🎲','CrazyGames','https://www.crazygames.com/','Browse a large library of browser games.'],['🎮','Poki','https://poki.com/','Browse casual and multiplayer browser games.'],['☁️','now.gg','https://now.gg/','Explore cloud games.']];
-webSites.forEach(s=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="emoji">${s[0]}</div><h3>${s[1]}</h3><p>${s[3]}</p><button class="play" type="button">Open Website ↗</button>`;d.querySelector('button').onclick=()=>window.open(s[2],'_blank','noopener,noreferrer');$('sites').appendChild(d)});
-function close(){if(timer)clearInterval(timer);if(keydown)document.removeEventListener('keydown',keydown);timer=null;keydown=null;$('overlay').classList.remove('open');$('area').innerHTML=''}
-$('close').onclick=close;$('overlay').onclick=e=>{if(e.target===$('overlay'))close()};
-function open(id,name){close();$('title').textContent=name;$('overlay').classList.add('open');let a=$('area');function node(tag,text,cls){let n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;a.appendChild(n);return n}function button(text,fn){let b=node('button',text);b.onclick=fn;return b}function score(t){return node('div',t,'score')}function msg(t){node('p',t)}
-if(id.startsWith('web-')){const info={
-'web-tic':{src:'https://tictoe.org/embed/tic-tac-toe',url:'https://tictoe.org/',label:'Online Tic-Tac-Toe'}
-}[id];
-const frame=document.createElement('iframe');frame.src=info.src;frame.title=info.label;frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allow='fullscreen; autoplay; gamepad';frame.style.cssText='display:block;width:100%;height:min(65vh,560px);min-height:360px;border:0;border-radius:12px;background:white';a.style.display='block';a.style.padding='8px';a.appendChild(frame);
-const note=document.createElement('p');note.style.cssText='text-align:center;margin:10px 0;color:var(--muted)';note.textContent='If the game area is blank or does not respond, open the full game in a new tab.';a.appendChild(note);
-const go=button('Open Full Game ↗',()=>window.open(info.url,'_blank','noopener,noreferrer'));go.style.margin='0 auto 8px';return}
-if(id==='tic'){let vals=Array(9).fill(''),turn='X',s=score('X goes first'),board=node('div',undefined,'tic');function win(){for(let q of [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]])if(vals[q[0]]&&vals[q[0]]===vals[q[1]]&&vals[q[1]]===vals[q[2]])return vals[q[0]];return vals.every(Boolean)?'Tie':null}vals.forEach((v,i)=>{let b=document.createElement('button');board.appendChild(b);b.onclick=()=>{if(vals[i]||win())return;vals[i]=turn;b.textContent=turn;let w=win();if(w)s.textContent=w==='Tie'?'Tie game!':w+' wins!';else{turn=turn==='X'?'O':'X';s.textContent=turn+' goes next'}}});button('Restart',()=>open(id,name));return}
-if(id==='guess'){let n=1+Math.floor(Math.random()*100),tries=0;msg('Guess the secret number from 1 to 100.');let inp=node('input');inp.type='number';inp.placeholder='Your guess';let s=score('');button('Guess',()=>{let v=+inp.value;if(!v){s.textContent='Type a number first.';return}tries++;s.textContent=v===n?'Correct in '+tries+' guesses! 🎉':v<n?'Too low!':'Too high!'});button('New number',()=>open(id,name));return}
-if(id==='cookie'){let n=0,per=1,cost=10,s=score('Cookies: 0');button('🍪 Click for cookies!',()=>{n+=per;s.textContent='Cookies: '+n+' (+'+per+' per click)'});button('Buy helper (10 cookies)',()=>{if(n>=cost){n-=cost;per++;cost=Math.ceil(cost*1.7);s.textContent='Cookies: '+n+' (+'+per+' per click)'}else s.textContent='Need more cookies!'});return}
-if(id==='rps'){let s=score('Choose a move!');['Rock','Paper','Scissors'].forEach(m=>button(m,()=>{let c=['Rock','Paper','Scissors'][Math.floor(Math.random()*3)],w=m===c?'Tie!':((m==='Rock'&&c==='Scissors')||(m==='Paper'&&c==='Rock')||(m==='Scissors'&&c==='Paper'))?'You win!':'Computer wins!';s.textContent=`You: ${m} · Computer: ${c} · ${w}`}));return}
-if(id==='memory'){let vals=['🐸','🚀','🍕','🐱','⚽','🌈','🦄','🎮','🐸','🚀','🍕','🐱','⚽','🌈','🦄','🎮'].sort(()=>Math.random()-.5),opened=[],found=new Set(),moves=0,s=score('Moves: 0'),board=node('div',undefined,'memory');vals.forEach((v,i)=>{let b=document.createElement('button');b.textContent='?';board.appendChild(b);b.onclick=()=>{if(found.has(i)||opened.includes(i)||opened.length===2)return;b.textContent=v;opened.push(i);if(opened.length===2){moves++;s.textContent='Moves: '+moves;if(vals[opened[0]]===vals[opened[1]]){opened.forEach(n=>found.add(n));opened=[];if(found.size===vals.length)s.textContent='You matched them all! 🎉'}else setTimeout(()=>{opened.forEach(n=>board.children[n].textContent='?');opened=[]},600)}}});return}
-if(id==='reaction'){let state='wait',start=0,delay;let b=button('Wait for green...',()=>{if(state==='wait'){clearTimeout(delay);state='early';b.textContent='Too soon! Tap to retry'}else if(state==='go'){b.textContent='Reaction: '+Math.round(performance.now()-start)+' ms';state='done'}else{close();open(id,name)}});b.style.minHeight='100px';b.style.fontSize='22px';msg('Wait for the button to turn green, then tap it fast.');delay=setTimeout(()=>{if(state==='wait'){state='go';start=performance.now();b.style.background='#35df8b';b.textContent='TAP NOW!'}},1200+Math.random()*2500);return}
-if(id==='mole'){let scoreVal=0,left=20,active=-1;const s=score('Score: 0 · 20 seconds');msg('Tap the mole before it moves!');const board=node('div');board.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(68px,88px));gap:8px;justify-content:center';const cells=[];function moveMole(){active=Math.floor(Math.random()*9);cells.forEach((b,i)=>{b.textContent=i===active?'🐹':'🕳️';b.style.background=i===active?'#c5f36b':'#30384a';b.style.color=i===active?'#111':'white'})}for(let i=0;i<9;i++){let b=document.createElement('button');b.style.cssText='height:70px;font-size:25px;background:#30384a;color:white';b.textContent='🕳️';b.onclick=()=>{if(left>0&&i===active){scoreVal++;s.textContent='Score: '+scoreVal+' · '+left+' seconds';moveMole()}};board.appendChild(b);cells.push(b)}moveMole();let end=Date.now()+20000;timer=setInterval(()=>{left=Math.max(0,Math.ceil((end-Date.now())/1000));s.textContent='Score: '+scoreVal+' · '+left+' seconds';if(left<=0){clearInterval(timer);timer=null;s.textContent='Time! Final score: '+scoreVal;cells.forEach(b=>b.disabled=true);button('Play again',()=>open(id,name))}},200);return}
-if(id==='2048'){let board=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],points=0;const s=score('Score: 0');const grid=node('div');grid.style.cssText='display:grid;grid-template-columns:repeat(4,minmax(48px,65px));gap:5px;background:#343b4d;padding:6px;border-radius:12px';function addTile(){let empty=board.map((v,i)=>v===0?i:-1).filter(i=>i>=0);if(empty.length)board[empty[Math.floor(Math.random()*empty.length)]]=Math.random()<.9?2:4}function draw(){grid.innerHTML='';board.forEach(v=>{let b=document.createElement('div');b.textContent=v||'';b.style.cssText='height:58px;display:grid;place-items:center;border-radius:7px;font-size:22px;font-weight:900;background:'+(v?'#c5f36b':'#1d2330')+';color:'+(v?'#15190f':'#aab2c3');grid.appendChild(b)});s.textContent='Score: '+points+(board.includes(2048)?' · You win! 🎉':'')}function move(dir){let changed=false;for(let k=0;k<4;k++){let inds=[];for(let j=0;j<4;j++)inds.push(dir==='left'?k*4+j:dir==='right'?k*4+(3-j):dir==='up'?j*4+k:(3-j)*4+k);let arr=inds.map(i=>board[i]).filter(Boolean),next=[];for(let n=0;n<arr.length;n++){if(arr[n]===arr[n+1]){next.push(arr[n]*2);points+=arr[n]*2;n++}else next.push(arr[n])}while(next.length<4)next.push(0);inds.forEach((idx,j)=>{if(board[idx]!==next[j])changed=true;board[idx]=next[j]})}if(changed)addTile();draw()}[['⬆️','up'],['⬅️','left'],['⬇️','down'],['➡️','right']].forEach(([t,d])=>button(t,()=>move(d)));addTile();addTile();draw();keydown=e=>{let k={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];if(k){e.preventDefault();move(k)}};document.addEventListener('keydown',keydown);button('New Game',()=>open(id,name));msg('Use the arrow buttons or your keyboard. Combine equal numbers.');return}
-if(id==='flappy'){let c=node('canvas');c.width=360;c.height=420;c.style.width='min(100%,360px)';const x=c.getContext('2d'),s=score('Tap to start');let bird=190,vy=0,gates=[],ticks=0,points=0,alive=true,started=false;msg('Tap the game or press Space to flap. Avoid the green gates.');function flap(){if(!started)started=true;if(alive)vy=-5.3}c.onclick=flap;keydown=e=>{if(e.code==='Space'){e.preventDefault();flap()}};document.addEventListener('keydown',keydown);function tick(){if(!alive)return;ticks++;if(started){vy+=.25;bird+=vy;if(ticks%88===0){let gapY=80+Math.random()*220;gates.push({x:370,gap:gapY,passed:false})}gates.forEach(g=>{g.x-=2.5;if(!g.passed&&g.x<45){g.passed=true;points++;s.textContent='Score: '+points}});gates=gates.filter(g=>g.x>-55);if(bird<8||bird>410||gates.some(g=>g.x<70&&g.x+48>35&&(bird<g.gap-72||bird>g.gap+72))){alive=false;s.textContent='Game over! Score: '+points;button('Play again',()=>open(id,name));return}}x.fillStyle='#121b35';x.fillRect(0,0,360,420);x.fillStyle='#e6eeff';for(let i=0;i<28;i++)x.fillRect((i*53-ticks*.4)%360,(i*83)%420,2,2);x.fillStyle='#c5f36b';gates.forEach(g=>{x.fillRect(g.x,0,48,g.gap-72);x.fillRect(g.x,g.gap+72,48,420)});x.fillStyle='#ffcf54';x.beginPath();x.arc(70,bird,13,0,Math.PI*2);x.fill();if(!started){x.fillStyle='white';x.font='bold 20px system-ui';x.fillText('TAP TO FLY',112,200)}}timer=setInterval(tick,25);return}
-if(id==='space'){let c=node('canvas');c.width=400;c.height=320;c.style.width='min(100%,400px)';const x=c.getContext('2d'),s=score('Score: 0');let px=180,shots=[],aliens=[],pts=0,alive=true,keys={},tickN=0;msg('Move with ← → or A/D. Tap Left, Right, and FIRE on a phone.');const ctl=node('div');ctl.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center';[['⬅️ Left',()=>px-=20],['🔥 FIRE',shoot],['Right ➡️',()=>px+=20]].forEach(([t,f])=>{let b=document.createElement('button');b.textContent=t;b.onclick=f;ctl.appendChild(b)});function shoot(){if(alive)shots.push({x:px+14,y:268})}keydown=e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();shoot()}};document.addEventListener('keydown',keydown);keyup=e=>keys[e.key]=false;document.addEventListener('keyup',keyup);function tick(){if(!alive)return;tickN++;if(keys.ArrowLeft||keys.a||keys.A)px-=4;if(keys.ArrowRight||keys.d||keys.D)px+=4;px=Math.max(2,Math.min(368,px));if(tickN%42===0)aliens.push({x:Math.random()*370,y:-15});shots.forEach(b=>b.y-=6);aliens.forEach(v=>v.y+=1.8);shots=shots.filter(b=>b.y>-10);aliens=aliens.filter(v=>v.y<340);shots.forEach(b=>{aliens.forEach(v=>{if(!v.hit&&Math.abs(b.x-v.x)<18&&Math.abs(b.y-v.y)<18){v.hit=true;b.dead=true;pts++;s.textContent='Score: '+pts}})});shots=shots.filter(b=>!b.dead);aliens=aliens.filter(v=>!v.hit);if(aliens.some(v=>v.y>280&&Math.abs(v.x-px)<28)){alive=false;s.textContent='Game over! Score: '+pts;button('Play again',()=>open(id,name));return}x.fillStyle='#080d19';x.fillRect(0,0,400,320);x.fillStyle='#e7ecff';for(let i=0;i<40;i++)x.fillRect((i*97)%400,(i*61+tickN*.4)%320,2,2);x.fillStyle='#c5f36b';x.fillRect(px,278,30,24);x.fillStyle='#ff647c';aliens.forEach(v=>{x.fillRect(v.x,v.y,22,16);x.fillRect(v.x+4,v.y+15,4,5);x.fillRect(v.x+14,v.y+15,4,5)});x.fillStyle='#65d6ff';shots.forEach(b=>x.fillRect(b.x,b.y,4,10))}timer=setInterval(tick,25);return}
-if(id==='snake'){let c=node('canvas');c.width=360;c.height=270;let x=c.getContext('2d'),s=[{x:8,y:7},{x:7,y:7}],d={x:1,y:0},f={x:12,y:7},pts=0,alive=true,sc=score('Score: 0');msg('Use arrow keys or buttons below.');let controls=node('div');[['⬆️',0,-1],['⬅️',-1,0],['⬇️',0,1],['➡️',1,0]].forEach(([t,dx,dy])=>button(t,()=>{if(dx!==-d.x||dy!==-d.y)d={x:dx,y:dy}}));keydown=e=>{let m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(m&&(m[0]!==-d.x||m[1]!==-d.y)){d={x:m[0],y:m[1]};e.preventDefault()}};document.addEventListener('keydown',keydown);function tick(){if(!alive)return;let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.y<0||h.x>=20||h.y>=15||s.some(p=>p.x===h.x&&p.y===h.y)){clearInterval(timer);sc.textContent='Game over! Score: '+pts;button('Play again',()=>open(id,name));return}s.unshift(h);if(h.x===f.x&&h.y===f.y){pts++;sc.textContent='Score: '+pts;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*15)}}else s.pop();x.fillStyle='#090c11';x.fillRect(0,0,360,270);x.fillStyle='#c5f36b';s.forEach(p=>x.fillRect(p.x*18+1,p.y*18+1,16,16));x.fillStyle='#ff6978';x.fillRect(f.x*18+3,f.y*18+3,12,12)}timer=setInterval(tick,125);return}
-if(id==='pong'||id==='break'||id==='dodge'){let c=node('canvas');c.width=420;c.height=270;let x=c.getContext('2d'),p=180,bx=210,by=130,vx=3,vy=3,pts=0,rocks=[];let sc=score('Score: 0');msg(id==='pong'?'Move your mouse to control the paddle.':id==='break'?'Move the paddle and bounce the ball into the bricks.':'Move your mouse left and right to dodge falling rocks.');c.onmousemove=e=>{let r=c.getBoundingClientRect();p=(e.clientX-r.left)*c.width/r.width-35};keydown=e=>{if(e.key==='ArrowLeft')p-=20;if(e.key==='ArrowRight')p+=20};document.addEventListener('keydown',keydown);let bricks=[];for(let r=0;r<3;r++)for(let j=0;j<7;j++)bricks.push({x:8+j*58,y:15+r*20,on:true});function tick(){x.fillStyle='#090c11';x.fillRect(0,0,420,270);p=Math.max(0,Math.min(350,p));if(id==='dodge'){if(Math.random()<.06)rocks.push({x:Math.random()*405,y:-10});rocks.forEach(r=>r.y+=3);x.fillStyle='#ff6978';rocks.forEach(r=>x.fillRect(r.x,r.y,12,12));x.fillStyle='#c5f36b';x.fillRect(p,240,35,18);pts++;if(rocks.some(r=>r.y>230&&r.y<260&&Math.abs(r.x-p)<28)){clearInterval(timer);sc.textContent='Game over! Score: '+pts;button('Play again',()=>open(id,name));return}}else{bx+=vx;by+=vy;if(bx<5||bx>415)vx*=-1;if(by<5)vy*=-1;if(by>235&&bx>p&&bx<p+70)vy=-Math.abs(vy);if(id==='break'){bricks.forEach(b=>{if(b.on&&bx>b.x&&bx<b.x+50&&by>b.y&&by<b.y+14){b.on=false;vy*=-1;pts++;sc.textContent='Bricks: '+pts}});x.fillStyle='#65d6ff';bricks.forEach(b=>{if(b.on)x.fillRect(b.x,b.y,50,14)});if(bricks.every(b=>!b.on)){clearInterval(timer);sc.textContent='You cleared the bricks! 🎉';button('Play again',()=>open(id,name));return}}else if(bx<10||bx>410){pts++;sc.textContent='Hits: '+pts;bx=210;by=130;vx*=-1}x.fillStyle='#c5f36b';x.fillRect(p,245,70,8);x.beginPath();x.arc(bx,by,6,0,7);x.fill()}}timer=setInterval(tick,25);return}
+
+const engine=document.getElementById('engine');
+
+const search=document.getElementById('search');
+
+search.action=engine.value;
+
+engine.addEventListener('change',()=>search.action=engine.value);
+
+let secret=Math.floor(Math.random()*100)+1;
+
+function checkGuess(){
+
+const value=Number(document.getElementById('guess').value);
+
+const result=document.getElementById('guessResult');
+
+if(!value||value<1||value>100)result.textContent='Enter a number from 1 to 100!';
+
+else if(value===secret)result.textContent='🎉 Correct! You win!';
+
+else if(value<secret)result.textContent='Too low! Try again.';
+
+else result.textContent='Too high! Try again.';
+
 }
-</script></body></html>
+
+function newNumber(){
+
+secret=Math.floor(Math.random()*100)+1;
+
+document.getElementById('guess').value='';
+
+document.getElementById('guessResult').textContent='New number picked!';
+
+}
+
+function rps(player){
+
+const choices=['Rock','Paper','Scissors'];
+
+const computer=choices[Math.floor(Math.random()*3)];
+
+let result;
+
+if(player===computer)result="It's a tie!";
+
+else if((player==='Rock'&&computer==='Scissors')||(player==='Paper'&&computer==='Rock')||(player==='Scissors'&&computer==='Paper'))result='You win! 🎉';
+
+else result='Computer wins!';
+
+document.getElementById('rpsResult').textContent='You: '+player+' | Computer: '+computer+' — '+result;
+
+}
+
+let cookies=0,helpers=0;
+
+function clickCookie(){cookies++;updateCookies();}
+
+function buyHelper(){
+
+if(cookies>=10){cookies-=10;helpers++;updateCookies();}
+
+else document.getElementById('helperInfo').textContent='You need 10 cookies to buy a helper!';
+
+}
+
+function updateCookies(){
+
+document.getElementById('cookies').textContent=cookies;
+
+document.getElementById('helperInfo').textContent='Helpers: '+helpers+' (each gives 1 cookie per second)';
+
+}
+
+setInterval(()=>{cookies+=helpers;updateCookies();},1000);
+
+</script>
+
+</body>
+
+</html>
