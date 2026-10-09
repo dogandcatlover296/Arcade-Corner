@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arcade Corner</title>
 <style>
 :root {
@@ -16,15 +16,16 @@
   --purple:#a477ff;
 }
 * { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
 body {
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
 }
 header {
-  padding:28px 18px;
   text-align:center;
+  padding:32px 16px;
   background:linear-gradient(135deg,#172b58,#41276b);
 }
 header h1 { margin:0 0 8px; font-size:36px; }
@@ -32,72 +33,82 @@ header p { margin:0; color:#d7defa; }
 nav {
   position:sticky;
   top:0;
-  z-index:5;
+  z-index:3;
   display:flex;
   justify-content:center;
   flex-wrap:wrap;
-  gap:10px;
+  gap:9px;
   padding:12px;
   background:#11182b;
   border-bottom:1px solid #293653;
 }
-button, .navlink {
+nav a,.button {
+  display:inline-block;
+  padding:11px 15px;
   border:0;
   border-radius:10px;
-  padding:11px 15px;
-  background:var(--panel2);
+  background:#29395f;
   color:white;
-  font-size:14px;
   font-weight:bold;
-  cursor:pointer;
   text-decoration:none;
+  cursor:pointer;
 }
-button:hover, .navlink:hover { background:#394b76; }
-main { max-width:1200px; margin:auto; padding:20px; }
-section { margin:24px 0 36px; scroll-margin-top:80px; }
-h2 { margin-bottom:8px; }
-.subtitle { color:var(--muted); line-height:1.5; }
-.searchbox {
+nav a:hover,.button:hover { background:#40558b; }
+main { max-width:1150px; padding:18px; margin:auto; }
+section { margin:25px 0 36px; scroll-margin-top:80px; }
+h2 { margin:0 0 10px; }
+.muted { color:var(--muted); line-height:1.5; }
+.launch-panel {
+  padding:25px;
+  border:1px solid #394b76;
+  border-radius:18px;
+  background:linear-gradient(135deg,#17294c,#30204d);
+}
+.launch-content {
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.roblox-icon {
+  display:grid;
+  place-items:center;
+  width:90px;
+  height:90px;
+  border-radius:20px;
+  background:#f3f5ff;
+  color:#1a2340;
+  font-size:48px;
+  flex-shrink:0;
+}
+.launch-info { flex:1; min-width:200px; }
+.launch-info h3 { margin:0 0 8px; font-size:24px; }
+.launch-info p { margin:0 0 15px; }
+.launch-button {
+  background:linear-gradient(135deg,#647fff,#a06bff);
+  padding:14px 20px;
+  font-size:16px;
+}
+.launch-button:hover { filter:brightness(1.12); }
+.info-box {
+  margin-top:20px;
+  padding:13px;
+  background:#10182b;
+  color:#c4cfea;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.6;
+}
+.search {
+  display:block;
   width:100%;
   padding:15px;
-  border-radius:12px;
+  margin:16px 0;
   border:1px solid #34415e;
+  border-radius:12px;
   background:#131b30;
   color:white;
   font-size:16px;
-  margin:15px 0;
-}
-.roblox-panel {
-  padding:20px;
-  border-radius:18px;
-  background:linear-gradient(135deg,#182748,#29204c);
-  border:1px solid #38476c;
-}
-.roblox-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.roblox-top h2 { margin:0; }
-.status { color:#c9d3f1; font-size:13px; }
-#robloxFrame {
-  display:block;
-  width:100%;
-  height:650px;
-  margin-top:18px;
-  background:#080d19;
-  border:1px solid #3c4968;
-  border-radius:12px;
-}
-.notice {
-  padding:12px;
-  background:#10182b;
-  border-radius:10px;
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
 }
 .grid {
   display:grid;
@@ -105,65 +116,43 @@ h2 { margin-bottom:8px; }
   gap:13px;
 }
 .card {
-  min-width:0;
-  padding:16px 12px;
+  padding:15px 12px;
   border:1px solid #273654;
   border-radius:15px;
   background:var(--panel);
-  cursor:pointer;
-  transition:transform .15s,border-color .15s;
 }
-.card:hover {
-  transform:translateY(-3px);
-  border-color:var(--blue);
-}
-.card .emoji { font-size:31px; margin-bottom:10px; }
-.card h3 { margin:0 0 7px; font-size:16px; }
-.card p { color:var(--muted); font-size:12px; margin:0 0 12px; }
-.play {
-  display:inline-block;
-  background:#304b91;
-  border-radius:7px;
-  padding:7px 10px;
-  font-size:12px;
-  font-weight:bold;
-}
+.card h3 { font-size:16px; margin:8px 0; }
+.card p { font-size:12px; color:var(--muted); min-height:30px; }
+.emoji { font-size:32px; }
+.card button { width:100%; margin-top:5px; }
 #gameArea {
   display:none;
   margin-top:20px;
   padding:20px;
-  background:var(--panel);
   border:1px solid #394968;
   border-radius:16px;
+  background:var(--panel);
 }
-#gameArea h3 { margin-top:0; }
-#gamePlayground {
-  margin-top:14px;
-  min-height:190px;
+#playground {
+  margin-top:15px;
   padding:18px;
+  min-height:150px;
+  text-align:center;
   background:#090f1f;
   border-radius:12px;
-  text-align:center;
 }
-#gameMessage { color:var(--muted); }
-.bigbutton {
-  margin:8px;
-  padding:14px 20px;
-  background:linear-gradient(135deg,#526ff0,#9258e9);
-}
+#playground button { margin:5px; }
 footer {
-  text-align:center;
   padding:25px;
-  color:var(--muted);
   border-top:1px solid #25314a;
-  font-size:13px;
+  text-align:center;
+  color:var(--muted);
 }
-[hidden] { display:none !important; }
-@media(max-width:600px) {
+@media(max-width:550px) {
   header h1 { font-size:29px; }
-  main { padding:13px; }
-  #robloxFrame { height:500px; }
+  main { padding:12px; }
   .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .launch-panel { padding:17px; }
 }
 </style>
 </head>
@@ -175,448 +164,309 @@ footer {
 </header>
 
 <nav>
-  <a class="navlink" href="#roblox">Roblox / now.gg</a>
-  <a class="navlink" href="#games">All Games</a>
-  <a class="navlink" href="#about">About</a>
+  <a href="#roblox">Roblox / now.gg</a>
+  <a href="#games">Game Room</a>
+  <a href="#about">About</a>
 </nav>
 
 <main>
-  <section id="roblox">
-    <div class="roblox-panel">
-      <div class="roblox-top">
-        <div>
-          <h2>🟥 Roblox on now.gg</h2>
-          <p class="subtitle">Try the player without leaving Arcade Corner.</p>
-        </div>
-        <button onclick="reloadRoblox()">Reload Player</button>
+<section id="roblox">
+  <div class="launch-panel">
+    <div class="launch-content">
+      <div class="roblox-icon">🎮</div>
+      <div class="launch-info">
+        <h3>Roblox on now.gg</h3>
+        <p class="muted">
+          Check now.gg for Roblox availability and launch options.
+        </p>
+        <a class="button launch-button"
+           href="https://now.gg/"
+           target="_blank"
+           rel="noopener noreferrer">
+          ▶ Open now.gg
+        </a>
       </div>
-
-      <iframe
-        id="robloxFrame"
-        src="https://now.gg/apps/roblox-corporation/5349/roblox.html"
-        title="Roblox on now.gg"
-        allow="fullscreen; autoplay"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin">
-      </iframe>
-
-      <p class="notice">
-        If the player loads, you can try using it right here.
-        If it stays blank or shows an error, now.gg may not allow
-        embedding Roblox on this website. Arcade Corner cannot
-        override that restriction.
-      </p>
-
-      <a class="navlink"
-         href="https://now.gg/"
-         target="_blank"
-         rel="noopener noreferrer">
-         Open now.gg in a new tab
-      </a>
     </div>
-  </section>
-
-  <section id="games">
-    <h2>🕹️ The Game Room</h2>
-    <p class="subtitle">
-      Search the collection and choose a game to play.
-      These are small browser-game prototypes, not the original
-      commercial games.
-    </p>
-
-    <input
-      id="search"
-      class="searchbox"
-      type="search"
-      placeholder="Search games..."
-      aria-label="Search games">
-
-    <div id="gameGrid" class="grid"></div>
-
-    <div id="gameArea">
-      <h3 id="gameTitle">Game</h3>
-      <p id="gameMessage">Ready to play?</p>
-      <div id="gamePlayground"></div>
-      <p><button onclick="closeGame()">Close Game</button></p>
+    <div class="info-box">
+      <strong>How to keep Arcade Corner open</strong><br>
+      Tap “Open now.gg” to open it in another tab. Play there, then
+      switch back to the Arcade Corner tab whenever you want.
+      This panel replaces the black embedded player.
+      Roblox availability on now.gg is not guaranteed.
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="about">
-    <h2>About Arcade Corner</h2>
-    <p class="subtitle">
-      Arcade Corner brings browser mini-games and game links together
-      in one place. Some external services may not allow their games
-      to run inside this page.
-    </p>
-  </section>
+<section id="games">
+  <h2>🕹️ Game Room</h2>
+  <p class="muted">
+    Search the collection. These are small built-in browser games
+    and prototypes, not the full commercial versions.
+  </p>
+  <input id="search" class="search" type="search"
+         placeholder="Search games..." aria-label="Search games">
+  <div id="grid" class="grid"></div>
+
+  <div id="gameArea">
+    <h2 id="gameTitle">Game</h2>
+    <p id="gameMessage" class="muted"></p>
+    <div id="playground"></div>
+    <p><button class="button" onclick="closeGame()">Close game</button></p>
+  </div>
+</section>
+
+<section id="about">
+  <h2>About Arcade Corner</h2>
+  <p class="muted">
+    A place for browser mini-games and game links.
+    External games may have their own availability and access rules.
+  </p>
+</section>
 </main>
 
-<footer>
-  Arcade Corner • Made for fun 🎮
-</footer>
+<footer>Arcade Corner • Have fun! 🎮</footer>
 
 <script>
 const games = [
-  ["🐍","Snake","Guide a snake and collect food."],
-  ["🏓","Pong","Keep the ball in play."],
-  ["🧱","Brick Breaker","Break the bricks."],
-  ["⚡","Reaction Test","Test your reaction speed."],
-  ["🧠","Memory Match","Remember and match cards."],
-  ["❎","Tic-Tac-Toe","Play a classic strategy game."],
-  ["🔢","Number Guess","Guess the secret number."],
-  ["🍪","Cookie Clicker","Click to earn points."],
-  ["💧","Dodge Drop","Dodge falling objects."],
-  ["✊","Rock Paper Scissors","Play against the computer."],
-  ["🐦","Flappy Flyer","Try to fly through obstacles."],
-  ["🔲","2048","Combine matching numbers."],
-  ["🔨","Whack-a-Mole","Hit the target as it appears."],
-  ["🚀","Space Blaster","Defend your space zone."],
-  ["👆","Click Speed Test","See how fast you can click."],
-  ["🌱","Grow a Garden","Grow plants in a simple garden."],
-  ["🎯","Arena Shooter","Practice hitting targets."],
-  ["🚓","Police Patrol","Explore a police-roleplay prototype."],
-  ["💎","Treasure Hunt","Search for hidden treasure."],
-  ["🗡️","Dungeon Explorer","Explore a fantasy adventure."],
-  ["🌀","Maze Runner","Find your way through a maze."],
-  ["➗","Math Sprint","Solve quick math questions."],
-  ["🔤","Word Scramble","Unscramble a word."],
-  ["🎨","Color Match","Match the displayed color."],
-  ["🎵","Simon Says","Repeat the pattern."],
-  ["🏹","Target Practice","Hit the targets."],
-  ["🏀","Ball Bounce","Keep the ball moving."],
-  ["⚽","Penalty Kick","Take a penalty shot."],
-  ["⛳","Mini Golf","Try a mini golf challenge."],
-  ["🎳","Bowling Challenge","Knock down the pins."],
-  ["🚲","Bike Race","Race through a simple course."],
-  ["🚗","Car Dodger","Avoid traffic."],
-  ["🚀","Jetpack Jump","Jump and dodge obstacles."],
-  ["🎣","Fishing Time","Catch a fish."],
-  ["🐶","Pet Care","Take care of your pet."],
-  ["🌾","Farm Builder","Build up your farm score."],
-  ["🪨","Space Miner","Mine space resources."],
-  ["🏝️","Island Survival","Gather supplies to survive."],
-  ["🧟","Zombie Escape","Escape the zombie zone."],
-  ["🤖","Robot Battle","Challenge a robot."],
-  ["🗼","Tower Climber","Climb higher and higher."],
-  ["⚔️","Dungeon Clicker","Click to collect dungeon loot."],
-  ["💰","Treasure Clicker","Collect treasure with each click."],
-  ["🍎","Fruit Catcher","Catch the falling fruit."],
-  ["🫧","Bubble Pop","Pop as many bubbles as you can."],
-  ["❄️","Snowball Fight","Throw snowballs at targets."],
-  ["🏰","Castle Defense","Defend your castle."],
-  ["🛡️","Tower Defense","Protect your base."],
-  ["🏙️","City Builder","Grow your city score."],
-  ["🚂","Train Driver","Run a train-driving challenge."],
-  ["✈️","Airplane Pilot","Fly through a simple challenge."],
-  ["🌕","Rocket Launch","Prepare a rocket launch."],
-  ["👗","Fashion Designer","Pick your favorite style."],
-  ["🍕","Pizza Shop","Serve imaginary customers."],
-  ["🍦","Ice Cream Shop","Make ice cream orders."],
-  ["🏃","Parkour Jump","Jump across platforms."],
-  ["🧗","Obstacle Course","Beat a mini obstacle course."],
-  ["🔦","Laser Dodge","Avoid the laser zone."],
-  ["👻","Ghost Hunter","Hunt for spooky targets."],
-  ["👑","Final Boss","Take on the final challenge."]
+["🐍","Snake","Collect food."],
+["🏓","Pong","Keep the ball in play."],
+["🧱","Brick Breaker","Break the bricks."],
+["⚡","Reaction Test","Test your reaction speed."],
+["🧠","Memory Match","Match the cards."],
+["❎","Tic-Tac-Toe","Play a classic."],
+["🔢","Number Guess","Guess the secret number."],
+["🍪","Cookie Clicker","Collect cookies."],
+["💧","Dodge Drop","Dodge falling objects."],
+["✊","Rock Paper Scissors","Play against the computer."],
+["🐦","Flappy Flyer","Fly through obstacles."],
+["🔲","2048","Combine matching numbers."],
+["🔨","Whack-a-Mole","Hit the target."],
+["🚀","Space Blaster","Blast space targets."],
+["👆","Click Speed Test","Test your clicking speed."],
+["🌱","Grow a Garden","Grow plants."],
+["🎯","Arena Shooter","Practice your aim."],
+["🚓","Police Patrol","Police-roleplay mini-game."],
+["💎","Treasure Hunt","Find treasure."],
+["🗡️","Dungeon Explorer","Explore a dungeon."],
+["🌀","Maze Runner","Find your way out."],
+["➗","Math Sprint","Solve math questions."],
+["🔤","Word Scramble","Unscramble words."],
+["🎨","Color Match","Match colors."],
+["🎵","Simon Says","Repeat a pattern."],
+["🏹","Target Practice","Hit the targets."],
+["🏀","Ball Bounce","Bounce the ball."],
+["⚽","Penalty Kick","Take a penalty shot."],
+["⛳","Mini Golf","Try a golf challenge."],
+["🎳","Bowling Challenge","Knock down pins."],
+["🚲","Bike Race","Race a course."],
+["🚗","Car Dodger","Avoid traffic."],
+["🚀","Jetpack Jump","Jump over obstacles."],
+["🎣","Fishing Time","Catch a fish."],
+["🐶","Pet Care","Care for your pet."],
+["🌾","Farm Builder","Build your farm."],
+["🪨","Space Miner","Mine resources."],
+["🏝️","Island Survival","Survive on an island."],
+["🧟","Zombie Escape","Escape zombies."],
+["🤖","Robot Battle","Challenge a robot."],
+["🗼","Tower Climber","Climb the tower."],
+["⚔️","Dungeon Clicker","Collect dungeon loot."],
+["💰","Treasure Clicker","Collect treasure."],
+["🍎","Fruit Catcher","Catch falling fruit."],
+["🫧","Bubble Pop","Pop bubbles."],
+["❄️","Snowball Fight","Hit targets with snowballs."],
+["🏰","Castle Defense","Defend your castle."],
+["🛡️","Tower Defense","Protect your base."],
+["🏙️","City Builder","Build your city."],
+["🚂","Train Driver","Drive a train."],
+["✈️","Airplane Pilot","Fly a plane."],
+["🌕","Rocket Launch","Launch a rocket."],
+["👗","Fashion Designer","Pick a style."],
+["🍕","Pizza Shop","Serve customers."],
+["🍦","Ice Cream Shop","Make ice cream."],
+["🏃","Parkour Jump","Jump across platforms."],
+["🧗","Obstacle Course","Beat the course."],
+["🔦","Laser Dodge","Avoid the lasers."],
+["👻","Ghost Hunter","Find spooky targets."],
+["👑","Final Boss","Challenge the boss."]
 ];
 
-const grid = document.getElementById("gameGrid");
+const grid = document.getElementById("grid");
 const search = document.getElementById("search");
 const area = document.getElementById("gameArea");
-const playground = document.getElementById("gamePlayground");
+const playground = document.getElementById("playground");
 const message = document.getElementById("gameMessage");
-let activeCleanup = null;
+let cleanup = null;
 
-function renderGames(filter="") {
+function renderGames(term="") {
   grid.innerHTML = "";
-  const term = filter.toLowerCase();
-
-  games.forEach((game,index) => {
-    if (!game[1].toLowerCase().includes(term)) return;
-
-    const card = document.createElement("div");
+  games.forEach((g,i) => {
+    if (!g[1].toLowerCase().includes(term.toLowerCase())) return;
+    const card = document.createElement("article");
     card.className = "card";
-    card.tabIndex = 0;
-    card.innerHTML = `
-      <div class="emoji">${game[0]}</div>
-      <h3>${game[1]}</h3>
-      <p>${game[2]}</p>
-      <span class="play">Play Now</span>
-    `;
-    card.onclick = () => startGame(index);
-    card.onkeydown = e => {
-      if(e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        startGame(index);
-      }
-    };
+    card.innerHTML =
+      `<div class="emoji">${g[0]}</div><h3>${g[1]}</h3>` +
+      `<p>${g[2]}</p><button class="button">Play</button>`;
+    card.querySelector("button").onclick = () => startGame(i);
     grid.appendChild(card);
   });
 }
 search.addEventListener("input", () => renderGames(search.value));
 renderGames();
 
-function reloadRoblox() {
-  const frame = document.getElementById("robloxFrame");
-  frame.src = frame.src;
-}
-
 function closeGame() {
-  if(activeCleanup) activeCleanup();
-  activeCleanup = null;
+  if (cleanup) cleanup();
+  cleanup = null;
   area.style.display = "none";
   playground.innerHTML = "";
 }
 
-function startGame(index) {
+function startGame(i) {
   closeGame();
   area.style.display = "block";
-  document.getElementById("gameTitle").textContent = games[index][1];
-  message.textContent = games[index][2];
+  document.getElementById("gameTitle").textContent = games[i][1];
+  message.textContent = games[i][2];
   area.scrollIntoView({behavior:"smooth",block:"start"});
-
   let score = 0;
-  const addButton = (label, action) => {
+
+  function button(label,fn) {
     const b = document.createElement("button");
-    b.className = "bigbutton";
+    b.className = "button";
     b.textContent = label;
-    b.onclick = action;
+    b.onclick = fn;
     playground.appendChild(b);
     return b;
-  };
-  const showScore = () => {
-    message.textContent = "Score: " + score;
-  };
-  const addText = (text) => {
+  }
+  function text(t) {
     const p = document.createElement("p");
-    p.textContent = text;
+    p.textContent = t;
     playground.appendChild(p);
-  };
+  }
 
-  // Number guessing
-  if(index === 6) {
+  if (i === 6) {
     const answer = Math.floor(Math.random()*20)+1;
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
     input.max = "20";
     input.placeholder = "Guess 1–20";
-    input.className = "searchbox";
+    input.className = "search";
     playground.appendChild(input);
-    addButton("Check Guess", () => {
+    button("Check", () => {
       const n = Number(input.value);
-      if(!n) return;
-      if(n === answer) message.textContent = "Correct! You win!";
-      else message.textContent = n < answer ? "Too low! Try again." : "Too high! Try again.";
+      message.textContent = !n ? "Enter a number." :
+        n===answer ? "Correct! You win!" :
+        n<answer ? "Too low. Try again!" : "Too high. Try again!";
     });
     return;
   }
 
-  // Tic-Tac-Toe
-  if(index === 5) {
+  if (i === 5) {
     let board = Array(9).fill("");
     let turn = "X";
     const status = document.createElement("p");
     playground.appendChild(status);
-    const buttons = [];
+    const cells = [];
+    const lines = [[0,1,2],[3,4,5],[6,7,8],
+                   [0,3,6],[1,4,7],[2,5,8],
+                   [0,4,8],[2,4,6]];
+    function won() {
+      return lines.some(l => board[l[0]] &&
+        board[l[0]]===board[l[1]] && board[l[1]]===board[l[2]]);
+    }
     function draw() {
+      cells.forEach((b,j) => b.textContent = board[j] || "·");
       status.textContent = "Turn: " + turn;
-      buttons.forEach((b,i) => b.textContent = board[i] || " ");
     }
-    function winner() {
-      const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-      return lines.some(line => board[line[0]] &&
-        board[line[0]]===board[line[1]] &&
-        board[line[1]]===board[line[2]]);
-    }
-    for(let i=0;i<9;i++) {
-      const b = addButton(" ", () => {
-        if(board[i] || winner() || board.every(Boolean)) return;
-        board[i] = turn;
-        if(winner()) status.textContent = turn + " wins!";
-        else if(board.every(Boolean)) status.textContent = "It's a draw!";
+    for(let j=0;j<9;j++) {
+      const b = button("·", () => {
+        if(board[j] || won() || board.every(Boolean)) return;
+        board[j] = turn;
+        if(won()) status.textContent = turn + " wins!";
+        else if(board.every(Boolean)) status.textContent = "Draw!";
         else {
           turn = turn==="X" ? "O" : "X";
           draw();
         }
       });
       b.style.width = "65px";
-      buttons.push(b);
+      cells.push(b);
     }
-    draw();
-    addButton("Restart", () => {
+    button("Restart", () => {
       board = Array(9).fill("");
       turn = "X";
       draw();
     });
-    return;
-  }
-
-  // Rock Paper Scissors
-  if(index === 9) {
-    addText("Choose your move.");
-    ["Rock","Paper","Scissors"].forEach(choice => {
-      addButton(choice, () => {
-        const options = ["Rock","Paper","Scissors"];
-        const cpu = options[Math.floor(Math.random()*3)];
-        if(choice===cpu) message.textContent = "Tie! Computer chose " + cpu;
-        else if(
-          (choice==="Rock" && cpu==="Scissors") ||
-          (choice==="Paper" && cpu==="Rock") ||
-          (choice==="Scissors" && cpu==="Paper")
-        ) message.textContent = "You win! Computer chose " + cpu;
-        else message.textContent = "Computer wins! It chose " + cpu;
-      });
-    });
-    return;
-  }
-
-  // Reaction test
-  if(index === 3) {
-    let ready = false;
-    let start = 0;
-    const b = addButton("Start Reaction Test", () => {
-      b.disabled = true;
-      b.textContent = "Wait for green...";
-      const delay = 1000 + Math.random()*3000;
-      const timer = setTimeout(() => {
-        ready = true;
-        start = Date.now();
-        b.disabled = false;
-        b.textContent = "CLICK NOW!";
-        b.style.background = "#17834b";
-      }, delay);
-      activeCleanup = () => clearTimeout(timer);
-    });
-    b.onclick = () => {
-      if(!ready) {
-        if(b.textContent === "Start Reaction Test") return;
-        message.textContent = "Too soon! Try again.";
-        return;
-      }
-      message.textContent = "Your reaction: " + (Date.now()-start) + " ms";
-      ready = false;
-      b.textContent = "Try Again";
-      b.style.background = "";
-    };
-    return;
-  }
-
-  // Memory matching
-  if(index === 4) {
-    let values = ["🍎","🍎","⭐","⭐","🐸","🐸","🎮","🎮"];
-    values.sort(() => Math.random()-.5);
-    let open = [];
-    let matched = [];
-    const buttons = [];
-    function draw() {
-      buttons.forEach((b,i) => {
-        b.textContent = matched.includes(i) || open.includes(i) ? values[i] : "❔";
-      });
-    }
-    values.forEach((v,i) => {
-      const b = addButton("❔", () => {
-        if(open.includes(i) || matched.includes(i) || open.length===2) return;
-        open.push(i);
-        draw();
-        if(open.length===2) {
-          if(values[open[0]]===values[open[1]]) {
-            matched.push(...open);
-            open = [];
-            message.textContent = "Match!";
-          } else {
-            const old = [...open];
-            setTimeout(() => {
-              open = open.filter(n => !old.includes(n));
-              draw();
-            },700);
-          }
-        }
-        if(matched.length===values.length) message.textContent = "You matched them all!";
-      });
-      b.style.width = "60px";
-      buttons.push(b);
-    });
     draw();
     return;
   }
 
-  // Clicker and garden
-  if([7,15,35,41,42].includes(index)) {
-    const names = {
-      7:"Cookies",15:"Plants",35:"Farm points",
-      41:"Dungeon loot",42:"Treasure"
-    };
-    const item = names[index] || "Points";
-    const scoreText = document.createElement("h2");
-    scoreText.textContent = item + ": 0";
-    playground.appendChild(scoreText);
-    addButton("Collect " + item, () => {
-      score++;
-      scoreText.textContent = item + ": " + score;
-    });
-    if(index===15 || index===35) {
-      addButton("Water / Upgrade", () => {
-        score += 5;
-        scoreText.textContent = item + ": " + score;
-        message.textContent = "Nice! Bonus points added.";
-      });
-    }
+  if (i === 9) {
+    ["Rock","Paper","Scissors"].forEach(choice => button(choice, () => {
+      const choices = ["Rock","Paper","Scissors"];
+      const cpu = choices[Math.floor(Math.random()*3)];
+      const win = (choice==="Rock" && cpu==="Scissors") ||
+                  (choice==="Paper" && cpu==="Rock") ||
+                  (choice==="Scissors" && cpu==="Paper");
+      message.textContent = choice===cpu ? "Tie! Computer chose "+cpu :
+        win ? "You win! Computer chose "+cpu :
+        "Computer wins! It chose "+cpu;
+    }));
     return;
   }
 
-  // Whack-a-mole / click speed
-  if(index===12 || index===14) {
-    let timeLeft = 10;
-    score = 0;
-    const scoreText = document.createElement("h2");
-    playground.appendChild(scoreText);
-    const b = addButton("Click the Target!", () => {
-      if(timeLeft<=0) return;
+  if ([7,15,35,41,42].includes(i)) {
+    const names = {7:"Cookies",15:"Plants",35:"Farm points",
+                   41:"Dungeon loot",42:"Treasure"};
+    const title = document.createElement("h2");
+    title.textContent = names[i]+": 0";
+    playground.appendChild(title);
+    button("Collect", () => {
       score++;
-      scoreText.textContent = "Score: " + score;
+      title.textContent = names[i]+": "+score;
     });
+    button("Bonus +5", () => {
+      score+=5;
+      title.textContent = names[i]+": "+score;
+    });
+    return;
+  }
+
+  if ([3,12,14].includes(i)) {
+    let left = 10;
+    const scoreText = document.createElement("h2");
+    scoreText.textContent = "Score: 0";
+    playground.appendChild(scoreText);
+    const b = button("Click as fast as you can!", () => {
+      if(left<=0) return;
+      score++;
+      scoreText.textContent = "Score: "+score;
+    });
+    message.textContent = "You have 10 seconds!";
     const timer = setInterval(() => {
-      timeLeft--;
-      message.textContent = "Time left: " + timeLeft + " seconds";
-      if(timeLeft<=0) {
+      left--;
+      message.textContent = "Time left: "+left+" seconds";
+      if(left<=0) {
         clearInterval(timer);
         b.disabled = true;
-        message.textContent = "Game over! Final score: " + score;
+        message.textContent = "Finished! Final score: "+score;
       }
     },1000);
-    activeCleanup = () => clearInterval(timer);
-    message.textContent = "You have 10 seconds!";
+    cleanup = () => clearInterval(timer);
     return;
   }
 
-  // Simple color choice
-  if(index===23) {
-    const colors = ["Red","Blue","Green","Yellow"];
-    const target = colors[Math.floor(Math.random()*colors.length)];
-    addText("Find this color: " + target);
-    colors.sort(() => Math.random()-.5).forEach(c => {
-      addButton(c, () => {
-        message.textContent = c===target ? "Correct!" : "Not quite. Try again!";
-      });
-    });
-    return;
-  }
-
-  // Basic score-based prototype for other cards
+  text("Try to beat your high score!");
   const scoreText = document.createElement("h2");
   scoreText.textContent = "Score: 0";
   playground.appendChild(scoreText);
-  addText("This is a simple prototype. Play by earning points!");
-  addButton("Play / Earn Points", () => {
+  button("Play / Earn Points", () => {
     score++;
-    scoreText.textContent = "Score: " + score;
+    scoreText.textContent = "Score: "+score;
     message.textContent = "Nice! Keep going.";
   });
-  addButton("Bonus", () => {
-    score += 5;
-    scoreText.textContent = "Score: " + score;
-    message.textContent = "Bonus points!";
+  button("Bonus +5", () => {
+    score+=5;
+    scoreText.textContent = "Score: "+score;
   });
 }
 </script>
