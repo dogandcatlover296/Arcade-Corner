@@ -1,299 +1,317 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Google Classroom</title>
-<link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Classroom</title>
+  <link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
 
-<style>
-* { box-sizing: border-box; }
+  <style>
+    :root {
+      color-scheme: dark;
+      --panel: rgba(20, 24, 48, 0.88);
+      --line: rgba(255,255,255,0.15);
+      --text: #f7f7ff;
+      --muted: #c4c7e5;
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  color: white;
-  background: linear-gradient(135deg, #11102b, #30216b, #102b52);
-}
+    * { box-sizing: border-box; }
 
-header { text-align: center; padding: 22px 12px 12px; }
-h1 { margin: 0 0 8px; font-size: 34px; }
-#clock { margin: 8px; color: #d9d5ff; font-size: 15px; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, #583aab 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, #154c91 0, transparent 35%),
+        linear-gradient(135deg, #10132c, #20224e);
+    }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 12px;
-}
+    header {
+      padding: 24px 16px 12px;
+      text-align: center;
+    }
 
-button, .action {
-  border: 1px solid #8276ff;
-  border-radius: 11px;
-  padding: 12px 16px;
-  color: white;
-  background: #29234e;
-  font-size: 15px;
-  cursor: pointer;
-  text-decoration: none;
-}
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 6vw, 46px);
+      letter-spacing: -1px;
+    }
 
-.tab.active, .action.primary { background: #7057ff; }
-.panel { display: none; padding: 8px 12px 18px; }
-.panel.active { display: block; }
+    #clock {
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-.toolbar {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin: 6px auto 12px;
-}
+    main {
+      width: min(1200px, 96%);
+      margin: 14px auto 24px;
+    }
 
-.viewer {
-  width: 100%;
-  height: 68vh;
-  min-height: 350px;
-  position: relative;
-  overflow: hidden;
-  border: 2px solid #7767ff;
-  border-radius: 14px;
-  background: white;
-}
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
 
-.viewer iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  background: white;
-}
+    button, .open-link {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 15px;
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
 
-.viewer:fullscreen,
-.viewer.fallback-fullscreen {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  border: 0;
-  border-radius: 0;
-  background: white;
-}
+    button:hover, .open-link:hover {
+      background: rgba(255,255,255,0.18);
+    }
 
-.viewer:fullscreen iframe,
-.viewer.fallback-fullscreen iframe {
-  width: 100%;
-  height: 100%;
-}
+    .tab.active {
+      background: #7355e8;
+      border-color: #a99aff;
+    }
 
-.fullscreen-controls { display: none; }
+    .viewer {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.3);
+    }
 
-.viewer:fullscreen .fullscreen-controls,
-.viewer.fallback-fullscreen .fullscreen-controls {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 10000;
-  padding: 5px;
-  border-radius: 12px;
-  background: rgba(25, 20, 55, 0.88);
-  opacity: 0.4;
-}
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
 
-.viewer:fullscreen .fullscreen-controls:focus-within,
-.viewer.fallback-fullscreen .fullscreen-controls:focus-within {
-  opacity: 1;
-}
+    .site-name {
+      margin-right: auto;
+      font-weight: bold;
+    }
 
-.logo {
-  font-size: 21px;
-  padding: 7px;
-  border: 0;
-  background: transparent;
-}
+    .frame-wrap {
+      height: min(72vh, 760px);
+      min-height: 420px;
+      background: #fff;
+    }
 
-.mini-button, .exit-button {
-  padding: 8px 10px;
-  font-size: 17px;
-  border: 0;
-}
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: white;
+    }
 
-.mini-button { background: #7057ff; }
-.exit-button { background: #29234e; }
+    .hint {
+      padding: 10px 14px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
 
-footer {
-  padding: 12px;
-  text-align: center;
-  color: #c8c3f5;
-  font-size: 12px;
-}
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 8px 16px 24px;
+      font-size: 13px;
+    }
 
-@media (max-width: 600px) {
-  h1 { font-size: 29px; }
-  .viewer { height: 65vh; }
-  button, .action { padding: 11px 13px; }
-}
-</style>
+    .viewer:fullscreen {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 0;
+      background: #10132c;
+    }
+
+    .viewer:fullscreen .toolbar {
+      padding: 8px;
+    }
+
+    .viewer:fullscreen .site-name,
+    .viewer:fullscreen .open-link,
+    .viewer:fullscreen .hint {
+      display: none;
+    }
+
+    .viewer:fullscreen .frame-wrap {
+      height: calc(100vh - 54px);
+      min-height: 0;
+    }
+
+    @media (max-width: 600px) {
+      .frame-wrap {
+        height: 68vh;
+        min-height: 360px;
+      }
+
+      .tabs button {
+        flex: 1;
+      }
+
+      .toolbar button {
+        padding: 10px 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<header>
-  <h1>❄️ Freeze Nova</h1>
-  <div id="clock">Loading clock...</div>
-</header>
+  <header>
+    <h1>🎮 Arcade Corner</h1>
+    <div id="clock">Loading time...</div>
+  </header>
 
-<nav class="tabs">
-  <button class="tab active" data-panel="fern">🌿 Fern</button>
-  <button class="tab" data-panel="secureweb">🌐 SecureWeb</button>
-  <button class="tab" data-panel="unblocked">🎮 Unblocked Games</button>
-</nav>
+  <main>
+    <nav class="tabs" aria-label="Websites">
+      <button class="tab active" data-panel="fern">🌿 Fern</button>
+      <button class="tab" data-panel="secureweb">🔒 SecureWeb</button>
+      <button class="tab" data-panel="unblocked">❄️ Freeze Nova</button>
+    </nav>
 
-<main>
-  <section class="panel active" id="fern">
-    <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('fernViewer')">⛶ Full Screen</button>
-      <button class="action" onclick="refreshSite('fernFrame')">🔄 Refresh</button>
-      <a class="action" target="_blank" rel="noopener"
-        href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22">Open Fern ↗</a>
-    </div>
-    <div class="viewer" id="fernViewer">
-      <div class="fullscreen-controls">
-        <span class="logo">❄️</span>
-        <button class="mini-button" onclick="refreshSite('fernFrame')" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('fernViewer')" title="Exit full screen">✕</button>
+    <section class="viewer" id="viewer">
+      <div class="toolbar">
+        <span class="site-name" id="siteName">Fern</span>
+        <button id="refreshBtn" type="button">↻ Refresh</button>
+        <a class="open-link" id="openLink"
+           href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
+           target="_blank" rel="noopener noreferrer">↗ Open link</a>
+        <button id="fullscreenBtn" type="button">⛶ Full Screen</button>
+        <button id="exitBtn" type="button" aria-label="Exit fullscreen" hidden>✕</button>
       </div>
-      <iframe id="fernFrame"
-        src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
-        title="Fern" allowfullscreen></iframe>
-    </div>
-  </section>
 
-  <section class="panel" id="secureweb">
-    <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('secureViewer')">⛶ Full Screen</button>
-      <button class="action" onclick="refreshSite('secureFrame')">🔄 Refresh</button>
-      <a class="action" href="https://securedweb.lol/" target="_blank" rel="noopener">Open SecureWeb ↗</a>
-    </div>
-    <div class="viewer" id="secureViewer">
-      <div class="fullscreen-controls">
-        <span class="logo">❄️</span>
-        <button class="mini-button" onclick="refreshSite('secureFrame')" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('secureViewer')" title="Exit full screen">✕</button>
+      <div class="frame-wrap">
+        <iframe
+          id="siteFrame"
+          title="Fern website"
+          src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
+          allow="fullscreen"
+          allowfullscreen
+          loading="eager"
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
       </div>
-      <iframe id="secureFrame" src="https://securedweb.lol/"
-        title="SecureWeb" allowfullscreen></iframe>
-    </div>
-  </section>
 
-  <section class="panel" id="unblocked">
-    <div class="toolbar">
-      <button class="action primary" onclick="goFullscreen('unblockedViewer')">⛶ Full Screen</button>
-      <button class="action" onclick="refreshSite('unblockedFrame')">🔄 Refresh</button>
-      <a class="action" href="https://unblocked-games.s3.amazonaws.com/index.html"
-        target="_blank" rel="noopener">Open Unblocked Games ↗</a>
-    </div>
-    <div class="viewer" id="unblockedViewer">
-      <div class="fullscreen-controls">
-        <span class="logo">❄️</span>
-        <button class="mini-button" onclick="refreshSite('unblockedFrame')" title="Refresh">🔄</button>
-        <button class="exit-button" onclick="exitFullscreen('unblockedViewer')" title="Exit full screen">✕</button>
+      <div class="hint">
+        If a website does not load here, use Open link to try it in a new tab.
       </div>
-      <iframe id="unblockedFrame"
-        src="https://unblocked-games.s3.amazonaws.com/index.html"
-        title="Unblocked Games" allowfullscreen></iframe>
-    </div>
-  </section>
-</main>
+    </section>
+  </main>
 
-<footer>Freeze Nova • Have fun!</footer>
+  <footer>Arcade Corner • Have fun!</footer>
 
-<script>
-function updateClock() {
-  const now = new Date();
-  const time = now.toLocaleTimeString([], {
-    hour: 'numeric', minute: '2-digit', second: '2-digit'
-  });
-  const date = now.toLocaleDateString([], {
-    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-  });
-  document.getElementById('clock').textContent = time + ' • ' + date;
-}
+  <script>
+    const sites = {
+      fern: {
+        name: "Fern",
+        url: "https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&directLoad=%221%22"
+      },
+      secureweb: {
+        name: "SecureWeb",
+        url: "https://securedweb.lol/"
+      },
+      unblocked: {
+        name: "Freeze Nova",
+        url: "https://unblocked-games.s3.amazonaws.com/index.html"
+      }
+    };
 
-updateClock();
-setInterval(updateClock, 1000);
+    const frame = document.getElementById("siteFrame");
+    const viewer = document.getElementById("viewer");
+    const siteName = document.getElementById("siteName");
+    const openLink = document.getElementById("openLink");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const exitBtn = document.getElementById("exitBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const tabs = document.querySelectorAll(".tab");
 
-document.querySelectorAll('.tab[data-panel]').forEach(button => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.tab[data-panel]').forEach(tab =>
-      tab.classList.remove('active')
-    );
-    document.querySelectorAll('.panel').forEach(panel =>
-      panel.classList.remove('active')
-    );
-    button.classList.add('active');
-    document.getElementById(button.dataset.panel).classList.add('active');
-  });
-});
+    let currentSite = "fern";
 
-function refreshSite(frameId) {
-  const frame = document.getElementById(frameId);
-  const originalSrc = frame.src;
-  frame.src = 'about:blank';
-  frame.src = originalSrc;
-}
+    function selectSite(key) {
+      const site = sites[key];
+      if (!site) return;
 
-async function goFullscreen(id) {
-  const viewer = document.getElementById(id);
-  try {
-    if (viewer.requestFullscreen) {
-      await viewer.requestFullscreen();
-    } else if (viewer.webkitRequestFullscreen) {
-      viewer.webkitRequestFullscreen();
-    } else {
-      viewer.classList.add('fallback-fullscreen');
+      currentSite = key;
+      frame.src = site.url;
+      frame.title = site.name + " website";
+      siteName.textContent = site.name;
+      openLink.href = site.url;
+
+      tabs.forEach(tab => {
+        const active = tab.dataset.panel === key;
+        tab.classList.toggle("active", active);
+        tab.setAttribute("aria-pressed", String(active));
+      });
     }
-  } catch (error) {
-    viewer.classList.add('fallback-fullscreen');
-  }
-}
 
-async function exitFullscreen(id) {
-  const viewer = document.getElementById(id);
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        selectSite(tab.dataset.panel);
+      });
+    });
 
-  if (viewer.classList.contains('fallback-fullscreen')) {
-    viewer.classList.remove('fallback-fullscreen');
-    return;
-  }
+    refreshBtn.addEventListener("click", () => {
+      frame.src = sites[currentSite].url;
+    });
 
-  try {
-    if (document.fullscreenElement && document.exitFullscreen) {
-      await document.exitFullscreen();
-    } else if (document.webkitFullscreenElement &&
-               document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else {
-      viewer.classList.remove('fallback-fullscreen');
+    fullscreenBtn.addEventListener("click", async () => {
+      try {
+        await viewer.requestFullscreen();
+      } catch {
+        alert("Fullscreen isn't available in this browser. Try opening the website in a new tab.");
+      }
+    });
+
+    exitBtn.addEventListener("click", () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    function updateFullscreenControls() {
+      const isFullscreen = document.fullscreenElement === viewer;
+      fullscreenBtn.hidden = isFullscreen;
+      exitBtn.hidden = !isFullscreen;
     }
-  } catch (error) {
-    viewer.classList.remove('fallback-fullscreen');
-  }
-}
 
-document.addEventListener('fullscreenchange', () => {
-  document.querySelectorAll('.viewer').forEach(viewer => {
-    if (document.fullscreenElement !== viewer) {
-      viewer.classList.remove('fallback-fullscreen');
+    document.addEventListener("fullscreenchange", updateFullscreenControls);
+
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+      const date = now.toLocaleDateString([], {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+      document.getElementById("clock").textContent = date + " • " + time;
     }
-  });
-});
-</script>
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
 </body>
 </html>
