@@ -3,136 +3,621 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arcade Corner</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0d18;--panel:#171b30;--line:#343958;--purple:#8b5cf6;--cyan:#38d9ff}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#24204b,#0b0d18 65%);color:#f5f5ff;font:16px system-ui,Arial}
-header{text-align:center;padding:28px 14px}
-h1{font-size:clamp(2.2rem,7vw,4rem);margin:0;font-weight:950;background:linear-gradient(90deg,var(--cyan),#b68aff,#ff5da2);color:transparent;background-clip:text}
-header p,.muted{color:#b0b5d0}
-.wrap{width:min(1100px,94%);margin:auto}
-.toolbar{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
-input,select{background:#101426;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}
-#search{flex:1;min-width:160px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
-.card{background:linear-gradient(145deg,#1b2039,#121525);border:1px solid var(--line);border-radius:15px;padding:15px;display:flex;flex-direction:column;min-height:170px}
-.card h3{margin:7px 0 4px;font-size:1rem}
-.card p{color:#b0b5d0;font-size:.88rem;flex:1;margin:0 0 12px}
-.emoji{font-size:1.8rem}
-button{background:linear-gradient(90deg,#7653e8,#a348eb);color:white;border:0;border-radius:10px;padding:10px 12px;font:inherit;font-weight:750;cursor:pointer}
-button:hover{filter:brightness(1.15)}
-.secondary{background:#252d4b}
-#player{display:none;background:#111426;border:1px solid var(--line);padding:15px;border-radius:16px;margin:20px 0}
-#game{display:block;width:100%;max-width:700px;height:auto;background:#080b17;border-radius:12px;margin:12px auto;touch-action:manipulation}
-#info{text-align:center;color:#cbd0e9;min-height:28px}
-#controls{text-align:center;margin:10px}
-#controls button{margin:4px}
-.notice{background:#19152c;border:1px solid #51447b;border-radius:12px;padding:12px;color:#ded7ff}
-.hidden{display:none!important}
-footer{text-align:center;padding:30px;color:#b0b5d0}
+:root {
+  --bg:#0b1020;
+  --panel:#151d33;
+  --panel2:#202b47;
+  --text:#f4f7ff;
+  --muted:#aab6d3;
+  --blue:#6c8cff;
+  --purple:#a477ff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
+}
+header {
+  padding:28px 18px;
+  text-align:center;
+  background:linear-gradient(135deg,#172b58,#41276b);
+}
+header h1 { margin:0 0 8px; font-size:36px; }
+header p { margin:0; color:#d7defa; }
+nav {
+  position:sticky;
+  top:0;
+  z-index:5;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:12px;
+  background:#11182b;
+  border-bottom:1px solid #293653;
+}
+button, .navlink {
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  background:var(--panel2);
+  color:white;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer;
+  text-decoration:none;
+}
+button:hover, .navlink:hover { background:#394b76; }
+main { max-width:1200px; margin:auto; padding:20px; }
+section { margin:24px 0 36px; scroll-margin-top:80px; }
+h2 { margin-bottom:8px; }
+.subtitle { color:var(--muted); line-height:1.5; }
+.searchbox {
+  width:100%;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #34415e;
+  background:#131b30;
+  color:white;
+  font-size:16px;
+  margin:15px 0;
+}
+.roblox-panel {
+  padding:20px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#182748,#29204c);
+  border:1px solid #38476c;
+}
+.roblox-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.roblox-top h2 { margin:0; }
+.status { color:#c9d3f1; font-size:13px; }
+#robloxFrame {
+  display:block;
+  width:100%;
+  height:650px;
+  margin-top:18px;
+  background:#080d19;
+  border:1px solid #3c4968;
+  border-radius:12px;
+}
+.notice {
+  padding:12px;
+  background:#10182b;
+  border-radius:10px;
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:13px;
+}
+.card {
+  min-width:0;
+  padding:16px 12px;
+  border:1px solid #273654;
+  border-radius:15px;
+  background:var(--panel);
+  cursor:pointer;
+  transition:transform .15s,border-color .15s;
+}
+.card:hover {
+  transform:translateY(-3px);
+  border-color:var(--blue);
+}
+.card .emoji { font-size:31px; margin-bottom:10px; }
+.card h3 { margin:0 0 7px; font-size:16px; }
+.card p { color:var(--muted); font-size:12px; margin:0 0 12px; }
+.play {
+  display:inline-block;
+  background:#304b91;
+  border-radius:7px;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:bold;
+}
+#gameArea {
+  display:none;
+  margin-top:20px;
+  padding:20px;
+  background:var(--panel);
+  border:1px solid #394968;
+  border-radius:16px;
+}
+#gameArea h3 { margin-top:0; }
+#gamePlayground {
+  margin-top:14px;
+  min-height:190px;
+  padding:18px;
+  background:#090f1f;
+  border-radius:12px;
+  text-align:center;
+}
+#gameMessage { color:var(--muted); }
+.bigbutton {
+  margin:8px;
+  padding:14px 20px;
+  background:linear-gradient(135deg,#526ff0,#9258e9);
+}
+footer {
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+  border-top:1px solid #25314a;
+  font-size:13px;
+}
+[hidden] { display:none !important; }
+@media(max-width:600px) {
+  header h1 { font-size:29px; }
+  main { padding:13px; }
+  #robloxFrame { height:500px; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 </style>
 </head>
 <body>
-<header>
-<h1>🕹️ ARCADE CORNER</h1>
-<p>60 mini-games. One website. Let the games begin!</p>
-</header>
-<main class="wrap">
-<div class="notice">All games below are original, simplified mini-games that run on this page. They do not require other game websites.</div>
-<div class="toolbar">
-<input id="search" placeholder="🔎 Search the games..." aria-label="Search games">
-<select id="filter" aria-label="Filter games">
-<option value="all">All 60 games</option>
-<option value="arcade">Arcade</option>
-<option value="puzzle">Puzzle</option>
-<option value="sports">Sports</option>
-<option value="adventure">Adventure</option>
-<option value="sim">Simulator</option>
-</select>
-</div>
-<section id="player">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-<h2 id="title">Game</h2><button class="secondary" onclick="stopGame()">✕ Close</button>
-</div>
-<canvas id="game" width="700" height="420"></canvas>
-<div id="info"></div><div id="controls"></div>
-</section>
-<h2>🎮 Play the games</h2>
-<p class="muted">Tap any game, then use its buttons or your keyboard.</p>
-<div id="games" class="grid"></div>
-</main>
-<footer>Arcade Corner • Built for fun 🎮</footer>
-<script>
-const names=[
-["Snake","🐍","arcade"],["Pong","🏓","sports"],["Brick Breaker","🧱","arcade"],["Reaction Test","⚡","arcade"],["Memory Match","🧠","puzzle"],
-["Tic-Tac-Toe","❎","puzzle"],["Number Guess","🔢","puzzle"],["Cookie Clicker","🍪","arcade"],["Dodge Drop","☄️","arcade"],["Rock Paper Scissors","✂️","arcade"],
-["Flappy Flyer","🐤","arcade"],["2048","🔢","puzzle"],["Whack-a-Mole","🔨","arcade"],["Space Blaster","🚀","arcade"],["Click Speed Test","👆","arcade"],
-["Grow a Garden","🌱","sim"],["Arena Shooter","🎯","arcade"],["Police Patrol","🚓","adventure"],["Treasure Hunt","💎","adventure"],["Dungeon Explorer","🗝️","adventure"],
-["Maze Runner","🌀","puzzle"],["Math Sprint","➗","puzzle"],["Word Scramble","🔤","puzzle"],["Color Match","🎨","puzzle"],["Simon Says","🟢","puzzle"],
-["Target Practice","🎯","arcade"],["Ball Bounce","🏀","sports"],["Penalty Kick","⚽","sports"],["Mini Golf","⛳","sports"],["Bowling Challenge","🎳","sports"],
-["Bike Race","🚲","sports"],["Car Dodger","🚗","sports"],["Jetpack Jump","🚀","arcade"],["Fishing Time","🎣","sim"],["Pet Care","🐶","sim"],
-["Farm Builder","🚜","sim"],["Space Miner","🪐","sim"],["Island Survival","🏝️","adventure"],["Zombie Escape","🧟","adventure"],["Robot Battle","🤖","arcade"],
-["Tower Climber","🗼","adventure"],["Dungeon Clicker","⚔️","arcade"],["Treasure Clicker","💰","arcade"],["Fruit Catcher","🍎","arcade"],["Bubble Pop","🫧","arcade"],
-["Snowball Fight","❄️","arcade"],["Castle Defense","🏰","strategy"],["Tower Defense","🛡️","strategy"],["City Builder","🏙️","sim"],["Train Driver","🚆","sim"],
-["Airplane Pilot","✈️","sim"],["Rocket Launch","🚀","sim"],["Fashion Designer","👕","sim"],["Pizza Shop","🍕","sim"],["Ice Cream Shop","🍦","sim"],
-["Parkour Jump","🏃","sports"],["Obstacle Course","🏁","sports"],["Laser Dodge","🔴","arcade"],["Ghost Hunter","👻","adventure"],["Final Boss","👾","arcade"]
-];
-const descriptions=[
-"Eat dots and avoid yourself.","Keep the ball in play.","Bounce the ball into the blocks.","Test your reaction speed.","Find the matching pairs.",
-"Get three marks in a row.","Guess the hidden number.","Click to earn cookies.","Avoid falling blocks.","Choose rock, paper, or scissors.",
-"Fly through the gaps.","Combine tiles to reach 2048.","Click the mole.","Shoot the moving targets.","Click as fast as you can.",
-"Plant, water, and harvest crops.","Move and shoot training targets.","Drive around town and catch speeders.","Find hidden treasures.","Explore rooms and collect keys.",
-"Find the way out.","Solve quick math questions.","Unscramble the word.","Match the target color.","Repeat the light sequence.",
-"Hit as many targets as possible.","Bounce the ball into the hoop.","Score a penalty goal.","Sink the ball in fewer shots.","Knock down the pins.",
-"Ride and avoid obstacles.","Avoid cars on the road.","Jump between platforms.","Catch fish to score points.","Feed and look after your pet.",
-"Grow crops and earn coins.","Mine asteroids for resources.","Collect supplies on an island.","Dodge monsters and survive.","Hit the robot targets.",
-"Climb platforms to the top.","Click to defeat dungeon monsters.","Collect coins with each click.","Catch falling fruit.","Pop as many bubbles as possible.",
-"Hit targets with snowballs.","Defend your castle.","Place defenses against waves.","Build your little city.","Keep your train moving.",
-"Fly your plane through rings.","Launch a rocket into space.","Choose colors and design an outfit.","Serve customers their orders.","Make the requested ice cream.",
-"Jump between platforms.","Reach the finish line.","Avoid the lasers.","Find ghosts in the dark.","Defeat the final target."
-];
-const descriptionsById=descriptions;
-const cards=document.getElementById("games");
-cards.innerHTML=names.map((g,i)=>`<article class="card" data-cat="${g[2]}" data-search="${(g[0]+" "+descriptions[i]).toLowerCase()}"><div class="emoji">${g[1]}</div><h3>${i+1}. ${g[0]}</h3><p>${descriptions[i]}</p><button onclick="startGame(${i})">Play here ▶</button></article>`).join("");
-document.getElementById("search").oninput=filter;
-document.getElementById("filter").onchange=filter;
-function filter(){let q=document.getElementById("search").value.toLowerCase(),f=document.getElementById("filter").value;document.querySelectorAll(".card").forEach(c=>c.classList.toggle("hidden",!c.dataset.search.includes(q)||(f!=="all"&&c.dataset.cat!==f)))}
-const C=document.getElementById("game"),X=C.getContext("2d"),W=C.width,H=C.height;
-let interval=null,raf=null,keydown=null,cleanup=null,clicker=null;
-function stopGame(){if(interval)clearInterval(interval);if(raf)cancelAnimationFrame(raf);if(keydown)window.removeEventListener("keydown",keydown);if(cleanup)cleanup();C.onclick=null;interval=raf=keydown=cleanup=clicker=null;document.getElementById("player").style.display="none"}
-function startGame(i){
-stopGame();document.getElementById("player").style.display="block";document.getElementById("player").scrollIntoView({behavior:"smooth"});
-document.getElementById("title").textContent=names[i][1]+" "+names[i][0];document.getElementById("controls").innerHTML="";document.getElementById("info").textContent="";
-const say=t=>document.getElementById("info").textContent=t;
-const btn=(t,fn)=>{let b=document.createElement("button");b.textContent=t;b.onclick=fn;document.getElementById("controls").appendChild(b);return b};
-const bg=()=>{X.fillStyle="#080b17";X.fillRect(0,0,W,H)};
-const txt=(t,y=H/2,size=28)=>{X.fillStyle="white";X.font=`bold ${size}px system-ui`;X.textAlign="center";X.fillText(t,W/2,y)};
-const rand=(n)=>Math.floor(Math.random()*n);
-function startBtn(fn){btn("Restart ↻",fn)}
-function drawButtonGrid(items,fn){items.forEach((v,k)=>btn(v,()=>fn(v,k)))}
 
-if(i===0){let snake=[{x:8,y:8}],dx=1,dy=0,food={x:4,y:4},score=0,alive=true;function draw(){bg();X.fillStyle="#36e3a0";snake.forEach(p=>X.fillRect(p.x*20,p.y*20,18,18));X.fillStyle="#ff5da2";X.fillRect(food.x*20,food.y*20,18,18);say("Score: "+score+" • Arrow keys or WASD");}keydown=e=>{let k=e.key.toLowerCase();if(k==="arrowup"||k==="w"){if(dy!==1){dx=0;dy=-1}}if(k==="arrowdown"||k==="s"){if(dy!==-1){dx=0;dy=1}}if(k==="arrowleft"||k==="a"){if(dx!==1){dx=-1;dy=0}}if(k==="arrowright"||k==="d"){if(dx!==-1){dx=1;dy=0}}};window.addEventListener("keydown",keydown);interval=setInterval(()=>{if(!alive)return;let h={x:snake[0].x+dx,y:snake[0].y+dy};if(h.x<0||h.y<0||h.x>=35||h.y>=21||snake.some(p=>p.x===h.x&&p.y===h.y)){alive=false;say("Game over! Score: "+score);startBtn(()=>startGame(i));return}snake.unshift(h);if(h.x===food.x&&h.y===food.y){score++;food={x:rand(34),y:rand(20)}}else snake.pop();draw()},120);draw();return}
-if(i===5){let board=Array(9).fill(""),turn="X";function draw(){bg();X.strokeStyle="#8b5cf6";X.lineWidth=4;for(let j=1;j<3;j++){X.beginPath();X.moveTo(j*W/3,50);X.lineTo(j*W/3,H-50);X.stroke();X.beginPath();X.moveTo(70,j*(H-100)/3+50);X.lineTo(W-70,j*(H-100)/3+50);X.stroke()}X.fillStyle="white";X.font="bold 65px system-ui";X.textAlign="center";board.forEach((v,j)=>X.fillText(v,(j%3+.5)*W/3,100+Math.floor(j/3)*105));say("Your turn: "+turn+" • Tap a square.");}C.onclick=e=>{let r=C.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height,col=Math.floor(x/(W/3)),row=Math.floor((y-50)/105),p=row*3+col;if(row<0||row>2||col<0||col>2||board[p])return;board[p]=turn;let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];if(wins.some(w=>w.every(n=>board[n]===turn))){draw();say(turn+" wins!");startBtn(()=>startGame(i));C.onclick=null;return}if(board.every(Boolean)){draw();say("It's a draw!");startBtn(()=>startGame(i));C.onclick=null;return}turn=turn==="X"?"O":"X";if(turn==="O"){let empty=board.map((v,n)=>v?null:n).filter(v=>v!==null);board[empty[rand(empty.length)]]="O";turn="X"}draw()};cleanup=()=>C.onclick=null;draw();return}
-if(i===6){let target=rand(100)+1,tries=0;bg();txt("Guess the number!",130);let input=document.createElement("input");input.type="number";input.placeholder="1–100";document.getElementById("controls").appendChild(input);btn("Guess",()=>{let n=+input.value;tries++;say(n===target?"Correct! Guesses: "+tries:n<target?"Too low!":"Too high!");if(n===target)startBtn(()=>startGame(i))});return}
-if(i===7||i===42){let score=0;function draw(){bg();txt(i===7?"🍪":"💰",200,90);txt("Score: "+score,285,30);say("Tap to score points!")}C.onclick=()=>{score++;draw()};cleanup=()=>C.onclick=null;btn("Click!",()=>{score++;draw()});draw();return}
-if(i===3){bg();let green=false,ready=false,begin=0,delay;txt("Tap when the screen turns green!",H/2,22);btn("Start test",()=>{green=false;ready=false;bg();txt("Wait for green...",H/2);delay=setTimeout(()=>{green=true;begin=performance.now();bg();X.fillStyle="#14532d";X.fillRect(0,0,W,H);txt("TAP NOW!",H/2)},1000+rand(3000));});C.onclick=()=>{if(green){say("Reaction time: "+Math.round(performance.now()-begin)+" ms");clearTimeout(delay)}else say("Too soon! Start again.")};cleanup=()=>{clearTimeout(delay);C.onclick=null};return}
-if(i===9){bg();txt("Rock Paper Scissors",140);drawButtonGrid(["🪨 Rock","📄 Paper","✂️ Scissors"],(v,k)=>{let cpu=rand(3),you=k;let res=you===cpu?"Tie!":(you-cpu+3)%3===1?"You win!":"Computer wins!";say(v+" vs "+["Rock","Paper","Scissors"][cpu]+". "+res)});return}
-if(i===11){let board=Array.from({length:16},()=>0);function add(){let e=board.map((v,j)=>v?null:j).filter(v=>v!==null);if(e.length)board[e[rand(e.length)]]=Math.random()<.85?2:4}add();add();function draw(){bg();X.textAlign="center";for(let j=0;j<16;j++){let x=(j%4)*170+5,y=Math.floor(j/4)*100+5;X.fillStyle=board[j]?"#5841a5":"#202641";X.fillRect(x,y,160,90);if(board[j]){X.fillStyle="white";X.font="bold 25px system-ui";X.fillText(board[j],x+80,y+55)}}say("Use arrow keys or WASD to combine tiles.");}keydown=e=>{let dir=e.key.toLowerCase();if(!["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s"].includes(dir))return;let vertical=["arrowup","arrowdown","w","s"].includes(dir),reverse=["arrowright","arrowdown","d","s"].includes(dir);for(let line=0;line<4;line++){let ids=[];for(let n=0;n<4;n++)ids.push(vertical?n*4+line:line*4+n);if(reverse)ids.reverse();let vals=ids.map(j=>board[j]).filter(Boolean);for(let n=0;n<vals.length-1;n++)if(vals[n]===vals[n+1]){vals[n]*=2;vals.splice(n+1,1)}while(vals.length<4)vals.push(0);ids.forEach((j,n)=>board[j]=vals[n])}add();draw()};window.addEventListener("keydown",keydown);draw();return}
-if(i===1){let px=30,py=H/2,ex=W-40,ey=H/2,bx=W/2,by=H/2,vx=4,vy=3,score=0;function draw(){bg();X.fillStyle="white";X.fillRect(px,py-40,12,80);X.fillRect(ex,ey-40,12,80);X.beginPath();X.arc(bx,by,9,0,7);X.fill();txt("Score "+score,30,20)}keydown=e=>{if(e.key==="ArrowUp")py=Math.max(40,py-24);if(e.key==="ArrowDown")py=Math.min(H-40,py+24)};window.addEventListener("keydown",keydown);interval=setInterval(()=>{bx+=vx;by+=vy;if(by<10||by>H-10)vy*=-1;if(bx<px+18&&Math.abs(by-py)<50)vx=Math.abs(vx);if(bx>ex-8&&Math.abs(by-ey)<50)vx=-Math.abs(vx);ey+=(by-ey)*.06;if(bx<0||bx>W){if(bx>W)score++;bx=W/2;by=H/2;vx*=-1}draw()},25);draw();say("Move your paddle with ↑ and ↓.");return}
-if(i===15||i===35){let coins=0,seeds=3,crops=0;bg();function draw(){bg();txt(i===15?"🌱 Grow a Garden":"🚜 Farm Builder",85,30);txt("Coins: "+coins,155);txt("Seeds: "+seeds,200);txt("Harvested crops: "+crops,245,22);say("Plant seeds, wait for crops, then harvest.");}btn("Plant seed (-1)",()=>{if(seeds>0){seeds--;say("Your crop is growing!");setTimeout(()=>{crops++;draw();say("A crop is ready to harvest!")},2500);draw()}else say("Buy more seeds first.")});btn("Harvest (+5 coins)",()=>{if(crops>0){crops--;coins+=5;draw()}else say("No crops ready yet.")});btn("Buy seed (5 coins)",()=>{if(coins>=5){coins-=5;seeds++;draw()}else say("You need 5 coins.")});draw();return}
-if(i===16||i===25||i===39||i===59){let score=0,targets=[];for(let j=0;j<7;j++)targets.push({x:30+rand(W-60),y:30+rand(H-60),r:15+rand(15)});function draw(){bg();targets.forEach(t=>{X.fillStyle=["#ff5da2","#38d9ff","#8b5cf6"][rand(3)];X.beginPath();X.arc(t.x,t.y,t.r,0,7);X.fill()});txt("Score: "+score,30,20);say("Tap targets to score points.");}C.onclick=e=>{let r=C.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let t=targets.find(t=>Math.hypot(x-t.x,y-t.y)<t.r);if(t){score++;t.x=30+rand(W-60);t.y=30+rand(H-60);draw()}};cleanup=()=>C.onclick=null;draw();return}
-if(i===4){let cards=["🐱","🐶","🐸","🦊","🐼","🐵","🐱","🐶","🐸","🦊","🐼","🐵"].sort(()=>Math.random()-.5),open=[],matched=[];function draw(){bg();cards.forEach((v,j)=>{let x=(j%4)*170+5,y=Math.floor(j/4)*135+5;X.fillStyle=matched.includes(j)?"#14532d":open.includes(j)?"#5841a5":"#202641";X.fillRect(x,y,160,125);X.fillStyle="white";X.font="40px system-ui";X.textAlign="center";X.fillText(matched.includes(j)||open.includes(j)?v:"?",x+80,y+75)});say("Pairs found: "+matched.length/2)}C.onclick=e=>{let r=C.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height,j=Math.floor(y/135)*4+Math.floor(x/170);if(j>=cards.length||open.includes(j)||matched.includes(j)||open.length===2)return;open.push(j);draw();if(open.length===2){if(cards[open[0]]===cards[open[1]]){matched.push(...open);open=[];draw()}else setTimeout(()=>{open=[];draw()},650)}};cleanup=()=>C.onclick=null;draw();return}
-if(i===5||i===6)return;
-if(i===10||i===32||i===55||i===56||i===57){let x=60,y=H-55,obs=[],score=0,alive=true;function draw(){bg();X.fillStyle="#242d4b";X.fillRect(0,H-35,W,35);X.fillStyle="#38d9ff";X.fillRect(x,y,32,32);obs.forEach(o=>{X.fillStyle="#ff5da2";X.fillRect(o.x,o.y,o.w,o.h)});txt("Score: "+score,28,20)}keydown=e=>{if(e.key==="ArrowLeft"||e.key==="a")x=Math.max(0,x-25);if(e.key==="ArrowRight"||e.key==="d")x=Math.min(W-32,x+25);if((e.key===" "||e.key==="ArrowUp")&&y>=H-90)y-=85};window.addEventListener("keydown",keydown);C.onclick=()=>{if(y>=H-90)y-=85};interval=setInterval(()=>{if(y<H-90)y+=8;obs.push({x:rand(W-25),y:-20,w:20,h:20});obs=obs.filter(o=>o.y<H);for(let o of obs)if(x<o.x+o.w&&x+32>o.x&&y<o.y+o.h&&y+32>o.y){alive=false;clearInterval(interval);say("Game over! Score: "+score);startBtn(()=>startGame(i));return}score++;draw()},120);draw();say("Move with ← →, jump with ↑ or tap.");return}
-if(i===8||i===42||i===43||i===44||i===45||i===58){let score=0,objects=[];function draw(){bg();X.fillStyle="#38d9ff";X.fillRect(W/2-20,H-55,40,35);objects.forEach(o=>{X.font="25px system-ui";X.fillText(o.e,o.x,o.y)});txt("Score: "+score,30,20)}keydown=e=>{if(e.key==="ArrowLeft")X.fillRect(20,H-55,30,30);if(e.key==="ArrowRight")X.fillRect(W-50,H-55,30,30)};window.addEventListener("keydown",keydown);C.onclick=()=>{score++;objects.push({x:rand(W-30),y:rand(H-80),e:["⭐","🍎","💎"][rand(3)]});draw()};interval=setInterval(()=>{score++;objects.push({x:rand(W-30),y:rand(H-80),e:["⭐","🍎","💎"][rand(3)]});if(objects.length>12)objects.shift();draw()},1200);draw();say("Tap the field to collect points.");cleanup=()=>C.onclick=null;return}
-if(i===2){let score=0,x=50,y=H-40,dx=4,dy=-4,paddle=300;function draw(){bg();X.fillStyle="#38d9ff";X.fillRect(x,y,15,15);X.fillStyle="#8b5cf6";for(let n=0;n<14;n++)X.fillRect(15+n*48,50+(n%2)*27,40,18);X.fillStyle="#ff5da2";X.fillRect(paddle,H-22,100,10);txt("Score: "+score,25,20)}C.onpointermove=e=>{let r=C.getBoundingClientRect();paddle=(e.clientX-r.left)*W/r.width-50};interval=setInterval(()=>{x+=dx;y+=dy;if(x<0||x>W-15)dx*=-1;if(y<0)dy*=-1;if(y>H-35&&x>paddle&&x<paddle+100){dy=-Math.abs(dy);score++}if(y>H){x=W/2;y=H/2;dy=-4}draw()},25);cleanup=()=>C.onpointermove=null;draw();say("Move your paddle with your mouse or finger.");return}
-if(i===13||i===17||i===18||i===19||i===20||i===21||i===22||i===23||i===24||i===26||i===27||i===28||i===29||i===30||i===31||i===33||i===34||i===36||i===37||i===38||i===40||i===41||i===46||i===47||i===48||i===49||i===50||i===51||i===52||i===53||i===54){
- let score=0;bg();txt(names[i][1],145,70);txt(names[i][0],205,30);txt("Score: 0",260,25);say(descriptions[i]);btn("Play / Do action",()=>{score+=1+rand(5);bg();txt(names[i][1],145,70);txt(names[i][0],205,30);txt("Score: "+score,260,25);say("Nice! Keep going to raise your score.")});btn("Reset",()=>startGame(i));return
+<header>
+  <h1>🎮 Arcade Corner</h1>
+  <p>Your corner of the internet for games and fun.</p>
+</header>
+
+<nav>
+  <a class="navlink" href="#roblox">Roblox / now.gg</a>
+  <a class="navlink" href="#games">All Games</a>
+  <a class="navlink" href="#about">About</a>
+</nav>
+
+<main>
+  <section id="roblox">
+    <div class="roblox-panel">
+      <div class="roblox-top">
+        <div>
+          <h2>🟥 Roblox on now.gg</h2>
+          <p class="subtitle">Try the player without leaving Arcade Corner.</p>
+        </div>
+        <button onclick="reloadRoblox()">Reload Player</button>
+      </div>
+
+      <iframe
+        id="robloxFrame"
+        src="https://now.gg/apps/roblox-corporation/5349/roblox.html"
+        title="Roblox on now.gg"
+        allow="fullscreen; autoplay"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
+
+      <p class="notice">
+        If the player loads, you can try using it right here.
+        If it stays blank or shows an error, now.gg may not allow
+        embedding Roblox on this website. Arcade Corner cannot
+        override that restriction.
+      </p>
+
+      <a class="navlink"
+         href="https://now.gg/"
+         target="_blank"
+         rel="noopener noreferrer">
+         Open now.gg in a new tab
+      </a>
+    </div>
+  </section>
+
+  <section id="games">
+    <h2>🕹️ The Game Room</h2>
+    <p class="subtitle">
+      Search the collection and choose a game to play.
+      These are small browser-game prototypes, not the original
+      commercial games.
+    </p>
+
+    <input
+      id="search"
+      class="searchbox"
+      type="search"
+      placeholder="Search games..."
+      aria-label="Search games">
+
+    <div id="gameGrid" class="grid"></div>
+
+    <div id="gameArea">
+      <h3 id="gameTitle">Game</h3>
+      <p id="gameMessage">Ready to play?</p>
+      <div id="gamePlayground"></div>
+      <p><button onclick="closeGame()">Close Game</button></p>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About Arcade Corner</h2>
+    <p class="subtitle">
+      Arcade Corner brings browser mini-games and game links together
+      in one place. Some external services may not allow their games
+      to run inside this page.
+    </p>
+  </section>
+</main>
+
+<footer>
+  Arcade Corner • Made for fun 🎮
+</footer>
+
+<script>
+const games = [
+  ["🐍","Snake","Guide a snake and collect food."],
+  ["🏓","Pong","Keep the ball in play."],
+  ["🧱","Brick Breaker","Break the bricks."],
+  ["⚡","Reaction Test","Test your reaction speed."],
+  ["🧠","Memory Match","Remember and match cards."],
+  ["❎","Tic-Tac-Toe","Play a classic strategy game."],
+  ["🔢","Number Guess","Guess the secret number."],
+  ["🍪","Cookie Clicker","Click to earn points."],
+  ["💧","Dodge Drop","Dodge falling objects."],
+  ["✊","Rock Paper Scissors","Play against the computer."],
+  ["🐦","Flappy Flyer","Try to fly through obstacles."],
+  ["🔲","2048","Combine matching numbers."],
+  ["🔨","Whack-a-Mole","Hit the target as it appears."],
+  ["🚀","Space Blaster","Defend your space zone."],
+  ["👆","Click Speed Test","See how fast you can click."],
+  ["🌱","Grow a Garden","Grow plants in a simple garden."],
+  ["🎯","Arena Shooter","Practice hitting targets."],
+  ["🚓","Police Patrol","Explore a police-roleplay prototype."],
+  ["💎","Treasure Hunt","Search for hidden treasure."],
+  ["🗡️","Dungeon Explorer","Explore a fantasy adventure."],
+  ["🌀","Maze Runner","Find your way through a maze."],
+  ["➗","Math Sprint","Solve quick math questions."],
+  ["🔤","Word Scramble","Unscramble a word."],
+  ["🎨","Color Match","Match the displayed color."],
+  ["🎵","Simon Says","Repeat the pattern."],
+  ["🏹","Target Practice","Hit the targets."],
+  ["🏀","Ball Bounce","Keep the ball moving."],
+  ["⚽","Penalty Kick","Take a penalty shot."],
+  ["⛳","Mini Golf","Try a mini golf challenge."],
+  ["🎳","Bowling Challenge","Knock down the pins."],
+  ["🚲","Bike Race","Race through a simple course."],
+  ["🚗","Car Dodger","Avoid traffic."],
+  ["🚀","Jetpack Jump","Jump and dodge obstacles."],
+  ["🎣","Fishing Time","Catch a fish."],
+  ["🐶","Pet Care","Take care of your pet."],
+  ["🌾","Farm Builder","Build up your farm score."],
+  ["🪨","Space Miner","Mine space resources."],
+  ["🏝️","Island Survival","Gather supplies to survive."],
+  ["🧟","Zombie Escape","Escape the zombie zone."],
+  ["🤖","Robot Battle","Challenge a robot."],
+  ["🗼","Tower Climber","Climb higher and higher."],
+  ["⚔️","Dungeon Clicker","Click to collect dungeon loot."],
+  ["💰","Treasure Clicker","Collect treasure with each click."],
+  ["🍎","Fruit Catcher","Catch the falling fruit."],
+  ["🫧","Bubble Pop","Pop as many bubbles as you can."],
+  ["❄️","Snowball Fight","Throw snowballs at targets."],
+  ["🏰","Castle Defense","Defend your castle."],
+  ["🛡️","Tower Defense","Protect your base."],
+  ["🏙️","City Builder","Grow your city score."],
+  ["🚂","Train Driver","Run a train-driving challenge."],
+  ["✈️","Airplane Pilot","Fly through a simple challenge."],
+  ["🌕","Rocket Launch","Prepare a rocket launch."],
+  ["👗","Fashion Designer","Pick your favorite style."],
+  ["🍕","Pizza Shop","Serve imaginary customers."],
+  ["🍦","Ice Cream Shop","Make ice cream orders."],
+  ["🏃","Parkour Jump","Jump across platforms."],
+  ["🧗","Obstacle Course","Beat a mini obstacle course."],
+  ["🔦","Laser Dodge","Avoid the laser zone."],
+  ["👻","Ghost Hunter","Hunt for spooky targets."],
+  ["👑","Final Boss","Take on the final challenge."]
+];
+
+const grid = document.getElementById("gameGrid");
+const search = document.getElementById("search");
+const area = document.getElementById("gameArea");
+const playground = document.getElementById("gamePlayground");
+const message = document.getElementById("gameMessage");
+let activeCleanup = null;
+
+function renderGames(filter="") {
+  grid.innerHTML = "";
+  const term = filter.toLowerCase();
+
+  games.forEach((game,index) => {
+    if (!game[1].toLowerCase().includes(term)) return;
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.tabIndex = 0;
+    card.innerHTML = `
+      <div class="emoji">${game[0]}</div>
+      <h3>${game[1]}</h3>
+      <p>${game[2]}</p>
+      <span class="play">Play Now</span>
+    `;
+    card.onclick = () => startGame(index);
+    card.onkeydown = e => {
+      if(e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        startGame(index);
+      }
+    };
+    grid.appendChild(card);
+  });
 }
-if(i===12||i===14){let score=0,seconds=10;bg();txt(names[i][0],140);txt("10",200,45);say("Press start, then tap quickly.");btn("Start",()=>{score=0;seconds=10;let b=controls.querySelector("button");interval=setInterval(()=>{seconds--;say("Time: "+seconds+" seconds • Score: "+score);if(seconds<=0){clearInterval(interval);say("Time's up! Final score: "+score)}},1000);C.onclick=()=>{score++;txt("Score: "+score,260,30)}});cleanup=()=>C.onclick=null;return}
-bg();txt(names[i][0]);say("Ready to play!");btn("Start game",()=>{startGame(i)}); 
+search.addEventListener("input", () => renderGames(search.value));
+renderGames();
+
+function reloadRoblox() {
+  const frame = document.getElementById("robloxFrame");
+  frame.src = frame.src;
+}
+
+function closeGame() {
+  if(activeCleanup) activeCleanup();
+  activeCleanup = null;
+  area.style.display = "none";
+  playground.innerHTML = "";
+}
+
+function startGame(index) {
+  closeGame();
+  area.style.display = "block";
+  document.getElementById("gameTitle").textContent = games[index][1];
+  message.textContent = games[index][2];
+  area.scrollIntoView({behavior:"smooth",block:"start"});
+
+  let score = 0;
+  const addButton = (label, action) => {
+    const b = document.createElement("button");
+    b.className = "bigbutton";
+    b.textContent = label;
+    b.onclick = action;
+    playground.appendChild(b);
+    return b;
+  };
+  const showScore = () => {
+    message.textContent = "Score: " + score;
+  };
+  const addText = (text) => {
+    const p = document.createElement("p");
+    p.textContent = text;
+    playground.appendChild(p);
+  };
+
+  // Number guessing
+  if(index === 6) {
+    const answer = Math.floor(Math.random()*20)+1;
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "1";
+    input.max = "20";
+    input.placeholder = "Guess 1–20";
+    input.className = "searchbox";
+    playground.appendChild(input);
+    addButton("Check Guess", () => {
+      const n = Number(input.value);
+      if(!n) return;
+      if(n === answer) message.textContent = "Correct! You win!";
+      else message.textContent = n < answer ? "Too low! Try again." : "Too high! Try again.";
+    });
+    return;
+  }
+
+  // Tic-Tac-Toe
+  if(index === 5) {
+    let board = Array(9).fill("");
+    let turn = "X";
+    const status = document.createElement("p");
+    playground.appendChild(status);
+    const buttons = [];
+    function draw() {
+      status.textContent = "Turn: " + turn;
+      buttons.forEach((b,i) => b.textContent = board[i] || " ");
+    }
+    function winner() {
+      const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      return lines.some(line => board[line[0]] &&
+        board[line[0]]===board[line[1]] &&
+        board[line[1]]===board[line[2]]);
+    }
+    for(let i=0;i<9;i++) {
+      const b = addButton(" ", () => {
+        if(board[i] || winner() || board.every(Boolean)) return;
+        board[i] = turn;
+        if(winner()) status.textContent = turn + " wins!";
+        else if(board.every(Boolean)) status.textContent = "It's a draw!";
+        else {
+          turn = turn==="X" ? "O" : "X";
+          draw();
+        }
+      });
+      b.style.width = "65px";
+      buttons.push(b);
+    }
+    draw();
+    addButton("Restart", () => {
+      board = Array(9).fill("");
+      turn = "X";
+      draw();
+    });
+    return;
+  }
+
+  // Rock Paper Scissors
+  if(index === 9) {
+    addText("Choose your move.");
+    ["Rock","Paper","Scissors"].forEach(choice => {
+      addButton(choice, () => {
+        const options = ["Rock","Paper","Scissors"];
+        const cpu = options[Math.floor(Math.random()*3)];
+        if(choice===cpu) message.textContent = "Tie! Computer chose " + cpu;
+        else if(
+          (choice==="Rock" && cpu==="Scissors") ||
+          (choice==="Paper" && cpu==="Rock") ||
+          (choice==="Scissors" && cpu==="Paper")
+        ) message.textContent = "You win! Computer chose " + cpu;
+        else message.textContent = "Computer wins! It chose " + cpu;
+      });
+    });
+    return;
+  }
+
+  // Reaction test
+  if(index === 3) {
+    let ready = false;
+    let start = 0;
+    const b = addButton("Start Reaction Test", () => {
+      b.disabled = true;
+      b.textContent = "Wait for green...";
+      const delay = 1000 + Math.random()*3000;
+      const timer = setTimeout(() => {
+        ready = true;
+        start = Date.now();
+        b.disabled = false;
+        b.textContent = "CLICK NOW!";
+        b.style.background = "#17834b";
+      }, delay);
+      activeCleanup = () => clearTimeout(timer);
+    });
+    b.onclick = () => {
+      if(!ready) {
+        if(b.textContent === "Start Reaction Test") return;
+        message.textContent = "Too soon! Try again.";
+        return;
+      }
+      message.textContent = "Your reaction: " + (Date.now()-start) + " ms";
+      ready = false;
+      b.textContent = "Try Again";
+      b.style.background = "";
+    };
+    return;
+  }
+
+  // Memory matching
+  if(index === 4) {
+    let values = ["🍎","🍎","⭐","⭐","🐸","🐸","🎮","🎮"];
+    values.sort(() => Math.random()-.5);
+    let open = [];
+    let matched = [];
+    const buttons = [];
+    function draw() {
+      buttons.forEach((b,i) => {
+        b.textContent = matched.includes(i) || open.includes(i) ? values[i] : "❔";
+      });
+    }
+    values.forEach((v,i) => {
+      const b = addButton("❔", () => {
+        if(open.includes(i) || matched.includes(i) || open.length===2) return;
+        open.push(i);
+        draw();
+        if(open.length===2) {
+          if(values[open[0]]===values[open[1]]) {
+            matched.push(...open);
+            open = [];
+            message.textContent = "Match!";
+          } else {
+            const old = [...open];
+            setTimeout(() => {
+              open = open.filter(n => !old.includes(n));
+              draw();
+            },700);
+          }
+        }
+        if(matched.length===values.length) message.textContent = "You matched them all!";
+      });
+      b.style.width = "60px";
+      buttons.push(b);
+    });
+    draw();
+    return;
+  }
+
+  // Clicker and garden
+  if([7,15,35,41,42].includes(index)) {
+    const names = {
+      7:"Cookies",15:"Plants",35:"Farm points",
+      41:"Dungeon loot",42:"Treasure"
+    };
+    const item = names[index] || "Points";
+    const scoreText = document.createElement("h2");
+    scoreText.textContent = item + ": 0";
+    playground.appendChild(scoreText);
+    addButton("Collect " + item, () => {
+      score++;
+      scoreText.textContent = item + ": " + score;
+    });
+    if(index===15 || index===35) {
+      addButton("Water / Upgrade", () => {
+        score += 5;
+        scoreText.textContent = item + ": " + score;
+        message.textContent = "Nice! Bonus points added.";
+      });
+    }
+    return;
+  }
+
+  // Whack-a-mole / click speed
+  if(index===12 || index===14) {
+    let timeLeft = 10;
+    score = 0;
+    const scoreText = document.createElement("h2");
+    playground.appendChild(scoreText);
+    const b = addButton("Click the Target!", () => {
+      if(timeLeft<=0) return;
+      score++;
+      scoreText.textContent = "Score: " + score;
+    });
+    const timer = setInterval(() => {
+      timeLeft--;
+      message.textContent = "Time left: " + timeLeft + " seconds";
+      if(timeLeft<=0) {
+        clearInterval(timer);
+        b.disabled = true;
+        message.textContent = "Game over! Final score: " + score;
+      }
+    },1000);
+    activeCleanup = () => clearInterval(timer);
+    message.textContent = "You have 10 seconds!";
+    return;
+  }
+
+  // Simple color choice
+  if(index===23) {
+    const colors = ["Red","Blue","Green","Yellow"];
+    const target = colors[Math.floor(Math.random()*colors.length)];
+    addText("Find this color: " + target);
+    colors.sort(() => Math.random()-.5).forEach(c => {
+      addButton(c, () => {
+        message.textContent = c===target ? "Correct!" : "Not quite. Try again!";
+      });
+    });
+    return;
+  }
+
+  // Basic score-based prototype for other cards
+  const scoreText = document.createElement("h2");
+  scoreText.textContent = "Score: 0";
+  playground.appendChild(scoreText);
+  addText("This is a simple prototype. Play by earning points!");
+  addButton("Play / Earn Points", () => {
+    score++;
+    scoreText.textContent = "Score: " + score;
+    message.textContent = "Nice! Keep going.";
+  });
+  addButton("Bonus", () => {
+    score += 5;
+    scoreText.textContent = "Score: " + score;
+    message.textContent = "Bonus points!";
+  });
 }
 </script>
 </body>
