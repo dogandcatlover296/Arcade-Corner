@@ -154,24 +154,24 @@
   </div>
 
   <nav class="tabs">
-    <button class="tab-button active" id="game-tab"
-      onclick="showTab('games')">🎮 Game Website</button>
+    <button class="tab-button active" id="fern-tab"
+      onclick="showTab('fern')">🌿 Fern</button>
     <button class="tab-button" id="secure-tab"
       onclick="showTab('secure')">🌐 SecureWeb</button>
   </nav>
 
   <main>
-    <section class="panel" id="games-panel">
-      <h2>🎮 Game Website</h2>
+    <section class="panel" id="fern-panel">
+      <h2>🌿 Fern</h2>
       <p class="description">
-        Try the original game website below. If it does not load,
-        use the Open Game Website button.
+        Welcome to Fern! Try the website below. If it doesn't load
+        inside the page, use the button to open it separately.
       </p>
 
       <div class="frame-wrap">
         <iframe
           src="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
-          title="Game Website"
+          title="Fern"
           allowfullscreen>
         </iframe>
       </div>
@@ -179,7 +179,7 @@
       <a class="open-link"
         href="https://d1w7oj52hl4x53.cloudfront.net/search?query=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;target=aHR0cHM6Ly9kMXc3b2o1MmhsNHg1My5jbG91ZGZyb250Lm5ldC94N2s5bTJwLmh0bWw%3D&amp;directLoad=%221%22"
         target="_blank" rel="noopener noreferrer">
-        Open Game Website ↗
+        Open Fern ↗
       </a>
     </section>
 
@@ -187,7 +187,7 @@
       <h2>🌐 SecureWeb</h2>
       <p class="description">
         Try SecureWeb below. If it cannot display inside this page,
-        use the button to open the website separately.
+        use the button to open it separately.
       </p>
 
       <div class="frame-wrap">
@@ -209,14 +209,14 @@
 
   <script>
     function showTab(tab) {
-      const gamesPanel = document.getElementById("games-panel");
+      const fernPanel = document.getElementById("fern-panel");
       const securePanel = document.getElementById("secure-panel");
-      const gameTab = document.getElementById("game-tab");
+      const fernTab = document.getElementById("fern-tab");
       const secureTab = document.getElementById("secure-tab");
 
-      gamesPanel.classList.toggle("hidden", tab !== "games");
+      fernPanel.classList.toggle("hidden", tab !== "fern");
       securePanel.classList.toggle("hidden", tab !== "secure");
-      gameTab.classList.toggle("active", tab === "games");
+      fernTab.classList.toggle("active", tab === "fern");
       secureTab.classList.toggle("active", tab === "secure");
     }
 
