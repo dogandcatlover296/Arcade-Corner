@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Google Classroom</title>
-<link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
+<link id="favicon" rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
 
 <style>
 :root {
@@ -108,7 +109,6 @@ footer {
   font-size: 13px;
 }
 
-/* Desktop and browsers that support fullscreen */
 .viewer:fullscreen {
   width: 100%;
   height: 100%;
@@ -124,10 +124,7 @@ footer {
 .viewer:fullscreen .open-link,
 .viewer:fullscreen .hint { display: none; }
 
-/* Full-page fallback for browsers without fullscreen support */
-body.fallback-fullscreen {
-  overflow: hidden;
-}
+body.fallback-fullscreen { overflow: hidden; }
 body.fallback-fullscreen header,
 body.fallback-fullscreen main > .tabs,
 body.fallback-fullscreen footer {
@@ -180,6 +177,7 @@ body.fallback-fullscreen .frame-wrap {
     <button class="tab active" data-panel="fern">🌿 Fern</button>
     <button class="tab" data-panel="secureweb">🔒 SecureWeb</button>
     <button class="tab" data-panel="unblocked">❄️ Freeze Nova</button>
+    <button class="tab" data-panel="sandbox">🏖️ Sandbox</button>
   </nav>
 
   <section class="viewer" id="viewer">
@@ -220,6 +218,10 @@ const sites = {
   unblocked: {
     name: "Freeze Nova",
     url: "https://unblocked-games.s3.amazonaws.com/index.html"
+  },
+  sandbox: {
+    name: "Sandbox",
+    url: "https://rockisdirt.github.io/"
   }
 };
 
@@ -264,17 +266,15 @@ refreshBtn.addEventListener("click", () => {
 });
 
 async function enterFullscreen() {
-  // Use native fullscreen when the browser supports it.
   if (viewer.requestFullscreen) {
     try {
       await viewer.requestFullscreen();
       return;
     } catch (error) {
-      // Continue to the page-sized fallback below.
+      // Use page-sized fallback.
     }
   }
 
-  // iPhone fallback: expand the viewer to fill the webpage.
   fallbackMode = true;
   document.body.classList.add("fallback-fullscreen");
   updateFullscreenButtons();
