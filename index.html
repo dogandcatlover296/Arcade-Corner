@@ -4,8 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>Google Classroom</title>
-<link id="favicon" rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
+<link rel="icon" href="https://www.gstatic.com/classroom/logo_square_rounded.svg">
 
 <style>
 :root {
@@ -14,54 +15,86 @@
   --border: rgba(255,255,255,.16);
   --panel: rgba(15,19,45,.94);
 }
-* { box-sizing: border-box; }
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  width: 100%;
+}
 
 body {
   margin: 0;
   min-height: 100vh;
+  width: 100%;
   font-family: Arial, sans-serif;
   color: var(--text);
   background:
     radial-gradient(ellipse at top left, #5940a7, transparent 45%),
     radial-gradient(ellipse at bottom right, #164b85, transparent 45%),
     #10132b;
+  overflow-x: hidden;
 }
 
 header {
   text-align: center;
   padding: 22px 12px 16px;
 }
+
 h1 {
   margin: 0 0 8px;
-  font-size: clamp(30px, 7vw, 44px);
+  font-size: clamp(28px, 7vw, 44px);
+  overflow-wrap: anywhere;
 }
-#clock { color: var(--muted); font-size: 13px; }
 
-main { width: 96%; max-width: 1250px; margin: 0 auto 22px; }
+#clock {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+main {
+  width: min(96%, 1250px);
+  margin: 0 auto 22px;
+}
 
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 12px;
 }
 
 button, .open-link {
+  min-width: 0;
+  max-width: 100%;
   font: bold 14px Arial, sans-serif;
   color: white;
   background: rgba(255,255,255,.09);
   border: 1px solid var(--border);
   border-radius: 11px;
-  padding: 11px 14px;
+  padding: 11px 12px;
   text-decoration: none;
+  text-align: center;
+  overflow-wrap: anywhere;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-button:active, .open-link:active { background: #5141a4; }
 
-.tab.active { background: #7154dc; border-color: #b7a5ff; }
+button:active, .open-link:active {
+  background: #5141a4;
+}
+
+.tab.active {
+  background: #7154dc;
+  border-color: #b7a5ff;
+}
 
 .viewer {
+  min-width: 0;
+  width: 100%;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -78,12 +111,21 @@ button:active, .open-link:active { background: #5141a4; }
   border-bottom: 1px solid var(--border);
 }
 
-.site-name { font-weight: bold; margin-right: auto; }
+.site-name {
+  font-weight: bold;
+  margin-right: auto;
+  overflow-wrap: anywhere;
+}
+
+.toolbar button,
+.toolbar .open-link {
+  flex: 0 1 auto;
+}
 
 .frame-wrap {
   width: 100%;
-  height: 72vh;
-  min-height: 380px;
+  height: clamp(400px, 72vh, 1000px);
+  min-height: 0;
   background: white;
 }
 
@@ -96,10 +138,11 @@ iframe {
 }
 
 .hint {
-  padding: 10px;
+  padding: 12px;
   text-align: center;
   color: var(--muted);
   font-size: 12px;
+  line-height: 1.5;
 }
 
 footer {
@@ -109,59 +152,136 @@ footer {
   font-size: 13px;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+/* Native fullscreen */
 .viewer:fullscreen {
   width: 100%;
   height: 100%;
+  max-height: 100%;
   border: 0;
   border-radius: 0;
   background: #10132b;
+  display: flex;
+  flex-direction: column;
 }
+
+.viewer:fullscreen .toolbar {
+  flex: 0 0 auto;
+}
+
 .viewer:fullscreen .frame-wrap {
-  height: calc(100vh - 54px);
+  flex: 1 1 auto;
+  height: auto;
   min-height: 0;
 }
+
 .viewer:fullscreen .site-name,
 .viewer:fullscreen .open-link,
-.viewer:fullscreen .hint { display: none; }
+.viewer:fullscreen .hint {
+  display: none;
+}
 
-body.fallback-fullscreen { overflow: hidden; }
+/* Full-page fallback for mobile browsers */
+body.fallback-fullscreen {
+  overflow: hidden;
+}
+
 body.fallback-fullscreen header,
 body.fallback-fullscreen main > .tabs,
 body.fallback-fullscreen footer {
   display: none;
 }
+
 body.fallback-fullscreen main {
   position: fixed;
   inset: 0;
   z-index: 9999;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   margin: 0;
+  max-width: none;
 }
+
 body.fallback-fullscreen .viewer {
   width: 100%;
   height: 100%;
+  height: 100dvh;
   border: 0;
   border-radius: 0;
+  display: flex;
+  flex-direction: column;
 }
+
 body.fallback-fullscreen .toolbar {
-  min-height: 48px;
+  flex: 0 0 auto;
   padding: 6px;
+  gap: 6px;
 }
+
 body.fallback-fullscreen .site-name,
 body.fallback-fullscreen .open-link,
-body.fallback-fullscreen .hint { display: none; }
+body.fallback-fullscreen .hint {
+  display: none;
+}
+
 body.fallback-fullscreen .frame-wrap {
-  height: calc(100% - 48px);
+  flex: 1 1 auto;
+  height: auto;
   min-height: 0;
 }
 
-[hidden] { display: none !important; }
+@media (max-width: 650px) {
+  main {
+    width: 96%;
+  }
 
-@media (max-width: 600px) {
-  .tabs button { flex: 1; padding: 12px 8px; }
-  .toolbar button { padding: 10px; }
-  .frame-wrap { height: 70vh; min-height: 350px; }
+  .tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tabs button {
+    width: 100%;
+    padding: 12px 6px;
+    font-size: 13px;
+  }
+
+  .toolbar {
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .site-name {
+    flex-basis: 100%;
+    margin: 0 0 2px;
+  }
+
+  .toolbar button,
+  .toolbar .open-link {
+    flex: 1 1 auto;
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .frame-wrap {
+    height: 70vh;
+    height: 70dvh;
+    min-height: 350px;
+  }
+
+  .viewer {
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .toolbar button,
+  .toolbar .open-link {
+    flex-basis: calc(50% - 8px);
+  }
 }
 </style>
 </head>
@@ -174,10 +294,10 @@ body.fallback-fullscreen .frame-wrap {
 
 <main>
   <nav class="tabs" aria-label="Websites">
-    <button class="tab active" data-panel="fern">🌿 Fern</button>
-    <button class="tab" data-panel="secureweb">🔒 SecureWeb</button>
-    <button class="tab" data-panel="unblocked">❄️ Freeze Nova</button>
-    <button class="tab" data-panel="sandbox">🏖️ Sandbox</button>
+    <button class="tab active" data-panel="fern" aria-pressed="true">🌿 Fern</button>
+    <button class="tab" data-panel="secureweb" aria-pressed="false">🔒 SecureWeb</button>
+    <button class="tab" data-panel="unblocked" aria-pressed="false">❄️ Freeze Nova</button>
+    <button class="tab" data-panel="sandbox" aria-pressed="false">🏖️ Sandbox</button>
   </nav>
 
   <section class="viewer" id="viewer">
@@ -190,11 +310,14 @@ body.fallback-fullscreen .frame-wrap {
     </div>
 
     <div class="frame-wrap">
-      <iframe id="siteFrame" title="Fern website"
+      <iframe
+        id="siteFrame"
+        title="Fern website"
         allow="fullscreen"
         allowfullscreen
         webkitallowfullscreen
-        loading="eager"></iframe>
+        loading="eager">
+      </iframe>
     </div>
 
     <div class="hint">
@@ -265,13 +388,17 @@ refreshBtn.addEventListener("click", () => {
   frame.src = sites[currentSite].url;
 });
 
+openLink.addEventListener("click", event => {
+  if (!sites[currentSite]) event.preventDefault();
+});
+
 async function enterFullscreen() {
   if (viewer.requestFullscreen) {
     try {
       await viewer.requestFullscreen();
       return;
     } catch (error) {
-      // Use page-sized fallback.
+      // Use the mobile page-sized fallback.
     }
   }
 
@@ -285,11 +412,8 @@ function leaveFullscreen() {
     document.exitFullscreen().catch(() => {});
   }
 
-  if (fallbackMode) {
-    fallbackMode = false;
-    document.body.classList.remove("fallback-fullscreen");
-  }
-
+  fallbackMode = false;
+  document.body.classList.remove("fallback-fullscreen");
   updateFullscreenButtons();
 }
 
@@ -308,12 +432,20 @@ function updateFullscreenButtons() {
 
 function updateClock() {
   const now = new Date();
+
   const date = now.toLocaleDateString([], {
-    weekday: "long", month: "long", day: "numeric", year: "numeric"
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
   });
+
   const time = now.toLocaleTimeString([], {
-    hour: "numeric", minute: "2-digit", second: "2-digit"
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit"
   });
+
   document.getElementById("clock").textContent = date + " • " + time;
 }
 
